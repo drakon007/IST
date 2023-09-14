@@ -30,7 +30,11 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'token'
+    ];
+
+    protected $guarded = [
+        'role_id'
     ];
 
     /**
@@ -39,7 +43,17 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public $timestamps = false;
+
+    public function roles() {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function results() {
+        return $this->hasMany(Result::class);
+    }
+
 }
