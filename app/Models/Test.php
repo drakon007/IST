@@ -9,6 +9,8 @@ class Test extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'type',
         'name'
@@ -16,7 +18,7 @@ class Test extends Model
 
     protected $hidden = [
         'type',
-        'visible'
+        'status'
     ];
 
     public function results() {

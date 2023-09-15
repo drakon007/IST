@@ -9,8 +9,9 @@ class Result extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'attempt',
         'result',
         'date'
     ];

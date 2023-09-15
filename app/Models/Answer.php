@@ -9,6 +9,8 @@ class Answer extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'answer',
         'column',

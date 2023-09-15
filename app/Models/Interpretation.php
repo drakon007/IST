@@ -9,12 +9,17 @@ class Interpretation extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'description',
-        'range'
+        'max',
+        'min'
     ];
 
     protected $hidden = [
+        'max',
+        'min',
         'test_id',
     ];
     
