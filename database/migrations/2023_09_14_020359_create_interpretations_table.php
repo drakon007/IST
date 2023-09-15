@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('interpretations', function (Blueprint $table) {
             $table->id();
-            $table->string('test_id');
-            $table->string('description');
-            $table->char('range');
+            $table->longText('description');
+            $table->integer('min');
+            $table->integer('max');
+            $table->integer('test_id');
         });
     }
 

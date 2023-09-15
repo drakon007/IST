@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('password');
             $table->string('token');
-            $table->string('role_id');
-            $table->string('result_id');
         });
     }
 
