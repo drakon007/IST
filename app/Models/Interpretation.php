@@ -22,8 +22,8 @@ class Interpretation extends Model
         'min',
         'test_id',
     ];
-    
-    public function test() {
-        return $this->belongsTo(Test::class);
+
+    public function tests() {
+        return $this->belongsToMany(Test::class);
     }
 }

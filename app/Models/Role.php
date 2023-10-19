@@ -10,7 +10,7 @@ class Role extends Model
     use HasFactory;
 
     public $timestamps = false;
-    
+
     protected $fillable = [
         'name'
     ];
@@ -19,7 +19,7 @@ class Role extends Model
         'name'
     ];
 
-    public function users() {
+    public function user() {
         return $this->belongsToMany(User::class);
     }
 }

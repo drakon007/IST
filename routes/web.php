@@ -7,6 +7,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,26 +24,55 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller(AnswerController::class)->group(function() {
-  
+Route::prefix('interpretation')->group(function () {
+    Route::controller(InterpretationController::class)->group(function() {
+        Route::get('/render', 'render');
+        Route::get('/get/{id_test}','getForTest');
+        Route::post('/create/{id_test}', 'createForTest');
+        Route::delete('/deleteone/{id_test}/{id_interpretation}', 'deleteForTestOne');
+        Route::delete('/deleteall/{id_test}', 'deleteForTestAll');
+        Route::put('/update/{id_interpretation}', 'update');
+    });
 });
 
-Route::controller(InterpretationController::class)->group(function() {
-
+// todo сделать авторизацию
+Route::prefix('auth')->group(function () {
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'login');
+        Route::post('/create', 'createUser');
+    });
 });
 
-Route::controller(QuestionController::class)->group(function() {
-
+Route::prefix('test')->group(function () {
+    Route::controller(TestController::class)->group(function() {
+        Route::get('render', 'render');
+        Route::post('/create', 'create');
+    });
 });
 
-Route::controller(ResultController::class)->group(function() {
 
-});
 
-Route::controller(TestController::class)->group(function() {
 
-});
+// Route::controller(AnswerController::class)->group(function() {
 
-Route::controller(UserController::class)->group(function() {
+// });
 
-});
+// Route::controller(InterpretationController::class)->group(function() {
+
+// });
+
+// Route::controller(QuestionController::class)->group(function() {
+
+// });
+
+// Route::controller(ResultController::class)->group(function() {
+
+// });
+
+// Route::controller(TestController::class)->group(function() {
+
+// });
+
+// Route::controller(UserController::class)->group(function() {
+
+// });

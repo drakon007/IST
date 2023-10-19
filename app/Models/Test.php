@@ -13,7 +13,8 @@ class Test extends Model
 
     protected $fillable = [
         'type',
-        'name'
+        'name',
+        'status'
     ];
 
     protected $hidden = [
@@ -24,9 +25,8 @@ class Test extends Model
     public function results() {
         return $this->hasMany(Result::class);
     }
-
     public function interpretations() {
-        return $this->hasMany(Interpretation::class);
+        return $this->belongsToMany(Interpretation::class);
     }
 
     public function questions() {
