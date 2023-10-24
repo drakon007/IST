@@ -46,4 +46,54 @@ class TestController extends Controller
 
     }
 
+    public function update($idTest, Request $request) {
+        try {
+            $this->validate($request, [
+                'name'=>['required', 'string', 'max:200'],
+            ]);
+
+            $test = Test::find($idTest);
+            if (!$test) {
+                return response()->json([
+                    'errors'=>"Теста не существует",
+                ])->setStatusCode(400);
+            }
+
+            $test->update([
+                'name' => $request->name,
+            ]);
+            $test->save();
+
+            return response()->json([
+                'message'=>'Тест обновлен'
+            ]);
+        }catch(\Throwable $th) {
+            return response()->json([
+                'errors'=>'Тест не обновлен',
+                'descriptions'=>$th
+            ])->setStatusCode(400);
+        }
+    }
+
+    public function delete($idTest) {
+        try {
+            $test = Test::find($idTest);
+            if (!$test) {
+                return response()->json([
+                    'errors'=>"Теста не существует",
+                ])->setStatusCode(400);
+            }
+            $test->interpretations()->detach();
+            $test->delete();
+
+            return response()->json([
+                'message'=>"Теста удален",
+            ]);
+        }catch(\Throwable $th) {
+            return response()->json([
+                'errors'=>'Тест не удален',
+                'descriptions'=>$th
+            ])->setStatusCode(400);
+        }
+    }
 }
