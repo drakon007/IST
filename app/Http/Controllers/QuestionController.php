@@ -28,7 +28,7 @@ class QuestionController extends Controller
 
         } catch (\Throwable $th) {
             return response()->json([
-                'errors' => "",
+                'errors' => "вопросы не получены",
                 "descriptions" => $th
             ])->setStatusCode(400);
         }
@@ -49,7 +49,7 @@ class QuestionController extends Controller
 
             $question = Question::make([
                 "question" => $request->question,
-                "test_id" => $idTest,
+                "test_id" => $test->id,
             ]);
             $question->save();
 
@@ -65,35 +65,56 @@ class QuestionController extends Controller
         }
     }
 
-    public function updateForTest($idTest, Request $requestv) {
+    public function updateForTest($idQuestion, Request $request) {
         try {
-            $test = Test::find($idTest);
-            if (!$test) {
+
+            $this->validate($request, [
+                "question" => ['required','string'],
+            ]);
+
+            $question = Question::find($idQuestion);
+
+            if (!$question) {
                 return response()->json([
-                    "error" => 'Теста не существует',
+                    "error" => 'Данного вопроса для теста не существует',
                 ])->setStatusCode(400);
             }
 
+            $question->update([
+               "question" => $request->question
+            ]);
+            $question->save();
+
+            return response()->json([
+                "message" => "Вопрос был изменен",
+            ]);
+
         } catch (\Throwable $th) {
             return response()->json([
-                'errors' => "",
+                'errors' => "Вопрос не изменен, проверьте правильность вопроса",
                 "descriptions" => $th
             ])->setStatusCode(400);
         }
     }
 
-    public function deleteForTest($idTest) {
+    public function deleteForTest($idQuestion,) {
         try {
-            $test = Test::find($idTest);
-            if (!$test) {
+            $question = Question::find($idQuestion);
+            if (!$question) {
                 return response()->json([
-                    "error" => 'Теста не существует',
+                    "error" => 'Вопроса не существует',
                 ])->setStatusCode(400);
             }
 
+            $question->delete();
+
+            return response()->json([
+                'message' => "Вопрос удален",
+            ])->setStatusCode(400);
+
         } catch (\Throwable $th) {
             return response()->json([
-                'errors' => "",
+                'errors' => "Вопрос не удален",
                 "descriptions" => $th
             ])->setStatusCode(400);
         }

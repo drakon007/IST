@@ -10,14 +10,12 @@ class Question extends Model
     use HasFactory;
 
     public $timestamps = false;
-    
-    protected $fillable = [
-        'question'
-    ];
 
-    protected $hidde = [
+    protected $fillable = [
+        'question',
         'test_id'
     ];
+
     public function test() {
         return $this->belongsTo(Test::class);
     }
