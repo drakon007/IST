@@ -56,8 +56,8 @@ Route::prefix('question')->group( function () {
     Route::controller(QuestionController::class)->group(function() {
         Route::get('/get/{id_test}', 'getForTest');
         Route::post('/create/{id_test}', 'createForTest');
-        Route::put('/update/{id_question}', 'updateForTest');
-        Route::delete('/delete/{id_question}', 'deleteForTest');
+        Route::put('/update/{id_question}', 'update');
+        Route::delete('/delete/{id_question}', 'delete');
     });
 });
 

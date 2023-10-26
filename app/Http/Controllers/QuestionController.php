@@ -65,7 +65,7 @@ class QuestionController extends Controller
         }
     }
 
-    public function updateForTest($idQuestion, Request $request) {
+    public function update($idQuestion, Request $request) {
         try {
 
             $this->validate($request, [
@@ -97,7 +97,7 @@ class QuestionController extends Controller
         }
     }
 
-    public function deleteForTest($idQuestion,) {
+    public function delete($idQuestion,) {
         try {
             $question = Question::find($idQuestion);
             if (!$question) {
