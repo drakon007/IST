@@ -14,7 +14,8 @@ class Answer extends Model
     protected $fillable = [
         'answer',
         'column',
-        'balls'
+        'balls',
+        'question_id',
     ];
 
     protected $hidden = [

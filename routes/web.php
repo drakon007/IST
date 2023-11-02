@@ -61,13 +61,16 @@ Route::prefix('question')->group( function () {
     });
 });
 
+Route::prefix('answer')->group(function () {
+    Route::controller(AnswerController::class)->group(function() {
+        Route::get('get/{id_question}', 'getForQuestion');
+        Route::post('create/{id_question}', 'createForQuestion');
+        Route::put('update/{id_answer}', 'update');
+        Route::delete('delete/{id_answer}', 'delete');
+    });
+});
 
 
-
-
-// Route::controller(AnswerController::class)->group(function() {
-
-// });
 
 // Route::controller(InterpretationController::class)->group(function() {
 
