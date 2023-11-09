@@ -21,10 +21,8 @@ class QuestionController extends Controller
                 array_push($questions, $question);
             }
 
-            return response()->json([
-                "messages" => "вопросы получены",
-                "questions" => $questions
-            ]);
+            return view('test.testing')
+                ->with('questions', $questions);
 
         } catch (\Throwable $th) {
             return response()->json([

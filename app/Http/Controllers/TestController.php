@@ -9,7 +9,7 @@ class TestController extends Controller
 {
     public function render() {
         $tests = Test::all();
-        return view('test.render')
+        return view('test.home_page')
             ->with('tests', $tests);
     }
 
