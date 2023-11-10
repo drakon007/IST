@@ -45,7 +45,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('test')->group(function () {
     Route::controller(TestController::class)->group(function() {
-        Route::get('/render', 'render');
+        Route::get('/render', 'render')->name('home');
         Route::post('/create', 'create');
         Route::put('/update/{id_test}', 'update');
         Route::delete('/delete/{id_test}', 'delete');

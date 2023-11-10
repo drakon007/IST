@@ -8,7 +8,7 @@ use App\Models\Test;
 class TestController extends Controller
 {
     public function render() {
-        $tests = Test::all();
+        $tests = Test::paginate(12);
         return view('test.home_page')
             ->with('tests', $tests);
     }

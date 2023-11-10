@@ -1,9 +1,8 @@
-{{--todo $answers = array
---}}
-
 @foreach($answers as $answer)
-    <div>
-        <input type="radio" id="{{$loop->iteration}}" name="answer">
-        <label for="{{$loop->iteration}}">{{$answer->answer}}</label>
-    </div>
+    @if($answer->question_id == $question_id)
+        <div>
+            <input type="radio" id="{{$loop->iteration}}" name="{{$question_id}}">
+            <label for="{{$loop->iteration}}">{{$answer->answer}}</label>
+        </div>
+    @endif
 @endforeach
