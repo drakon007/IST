@@ -15,11 +15,13 @@ class QuestionController extends Controller
                     "error" => 'Теста не существует',
                 ])->setStatusCode(400);
             }
+// todo узнать, через модель или связь
+//            $questions = [];
+//            foreach ($test->questions as $question) {
+//                array_push($questions, $question);
+//            }
 
-            $questions = [];
-            foreach ($test->questions as $question) {
-                array_push($questions, $question);
-            }
+            $questions = Question::where('test_id', $test->id)->paginate(1);
 
             return view('test.testing')
                 ->with('questions', $questions);

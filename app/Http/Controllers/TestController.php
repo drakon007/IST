@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Test;
+use App\Models\Status;
 
 class TestController extends Controller
 {
@@ -30,9 +31,10 @@ class TestController extends Controller
             $test = Test::make([
                 'type' => $request->type,
                 'name' => $request->name,
-                'status' => 'active'
+                'status_id' => 1,
             ]);
             $test->save();
+
 
             return response()->json([
                 'message' => 'Тест создан'

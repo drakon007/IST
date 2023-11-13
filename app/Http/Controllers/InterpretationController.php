@@ -165,4 +165,34 @@ class InterpretationController extends Controller
             ])->setStatusCode(400);
         }
     }
+
+    public function  addInterpretationForTest($idInterpretation, $idTest)
+    {
+        try {
+            $test = Test::find($idTest);
+            if (!$test) {
+                return response()->json([
+                    'error' => "Теста не существует, к нему нельзя добавить интерпретацию"
+                ])->setStatusCode(400);
+            }
+            $interpretation = Interpretation::find($idInterpretation);
+            if (!$interpretation) {
+                return response()->json([
+                    'error' => "Интерпретации не существует"
+                ])->setStatusCode(400);
+            }
+            $interpretation->tests()->attach($test->id);
+
+            return response()->json([
+                'message' => "Интерпретация добавлена к тесту"
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "Интерпритация не добвалена",
+                "descriptions" => $th
+            ])->setStatusCode(400);
+        }
+
+
+    }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('answer_users', function (Blueprint $table) {
             $table->id();
             $table->integer('result_id');
-            $table->timestamps();
+            $table->integer('answer_id');
         });
     }
 

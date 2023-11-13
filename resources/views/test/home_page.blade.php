@@ -16,7 +16,7 @@
     <div class="flex flex-wrap ">
         @foreach ($tests as $test)
             <div class="flex w-full lg:w-1/2 md:w-1/3 xl:w-1/3 flex-wrap">
-                <div class="w-full rounded ">
+                <div class="w-full rounded flex flex-col justify-center items-center text-center">
                     <div class="px-6 py-4">
                         <div
                             class="font-bold text-xl mb-2 text-center md:text-left text-4xl md:text-3xl"> {{$test->name}}</div>
@@ -24,7 +24,7 @@
                         {{--// todo если надо будет добавить описание к тесту--}}
                     </div>
                     <div class="text-center md:text-left px-6 pt-4 pb-2  text-xl md:text-base">
-                        @if ($test->status == "active")
+                        @if ($test->status_id == "1")
                             <a href="http://127.0.0.1:8000/question/get/{{$test->id}}">
                                 <button
                                     class="bg-blue-500 hover:bg-blue-700 text-white rounded-full px-3 py-1  font-semibold text-gray-700 mr-2 mb-2"
@@ -43,8 +43,7 @@
     </div>
 </div>
 
-<footer class="flex">
-    <nav class=" mx-auto flex gap-0.5">
+<footer class="flex flex-row content-between flex-wrap justify-center">
         {{--если текущая страница не 1 тогда отрисовать кнопку назад--}}
         @if($tests->currentPage() > 1)
             <div>
@@ -63,7 +62,7 @@
         {{--если страниц несколько, тогда вывесити ссылки на них--}}
         @if($tests->lastPage() >=2)
             @for ($i = 0; $i < $tests->lastPage(); $i++)
-                <div class="justify-center">
+                <div class="flex">
                     <a href="{{$tests->url($i+1)}}"
                        class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
                         {{$i+1}}
@@ -72,7 +71,7 @@
             @endfor
         @endif
 
-        {{--если это не последняя страница, отрисовать кнопку далее--}}
+{{--        если это не последняя страница, отрисовать кнопку далее--}}
         @if($tests->currentPage() < $tests->lastPage())
             <div>
                 <a href="{{$tests->nextPageUrl()}}"
@@ -86,9 +85,6 @@
                 </a>
             </div>
         @endif
-    </nav>
 </footer>
-
-
 </body>
 </html>

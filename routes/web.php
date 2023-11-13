@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\InterpretationController;
@@ -9,19 +10,17 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('auth')->group(function () {
+   Route::controller(AuthController::class)->group(function () {
+      Route::get('/login', 'login')->name('login');
+      Route::post('/auth','auth')->name('auth');
+      Route::post('/adduser', 'adduser')->name('adduser');
+      Route::get('/create', 'create')->name('create');
+   });
 });
 
 Route::prefix('interpretation')->group(function () {
@@ -32,14 +31,6 @@ Route::prefix('interpretation')->group(function () {
         Route::delete('/deleteone/{id_test}/{id_interpretation}', 'deleteForTestOne');
         Route::delete('/deleteall/{id_test}', 'deleteForTestAll');
         Route::put('/update/{id_interpretation}', 'update');
-    });
-});
-
-// todo сделать авторизацию
-Route::prefix('auth')->group(function () {
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'login');
-        Route::post('/create', 'createUser');
     });
 });
 
@@ -88,3 +79,5 @@ Route::prefix('answer')->group(function () {
 // Route::controller(UserController::class)->group(function() {
 
 // });
+
+

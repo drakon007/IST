@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->longText('result');
-            $table->integer('test_id');
-            $table->integer('user_id');
-            $table->dateTime('date');
+            $table->longText('result'); // полученая интерпретация
+            $table->integer('test_id'); // id теста
+            $table->integer('user_id'); // id пользователя
+            $table->integer('attempts'); // попытки
+            $table->integer('status_id'); // статус
+            $table->timestamps();
         });
     }
 
