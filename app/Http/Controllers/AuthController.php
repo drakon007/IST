@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
@@ -13,30 +14,10 @@ use Illuminate\Support\Collection;
 class AuthController extends Controller
 {
 
-       public $registrationInput = [
-            'check' => [
-                'login',
-                'fio',
-                'group',
-                'password',
-            ],
-            'label' => [
-                'Логин',
-                'Фамилия Имя Отчество',
-                'Группа',
-                'Пароль',
-            ],
-            'error' => [
-                'Пожалуйста введите ваш логин',
-                'Пожалуйста введите ваши инициалы',
-                'Пожалуйста введите вашу группу',
-                'Пожалуйста введите пароль',
-            ]
-        ];
     public function login()
     {
         try {
-            return view('auth.login');
+            return view('auth.login')->with('err',false);
         } catch (\Throwable $th) {
             return response()->json([
                 "description" => $th
@@ -44,29 +25,25 @@ class AuthController extends Controller
         }
     }
 
-    public function auth(Request $request)
+    public function auth(LoginRequest $request)
     {
         try {
-            $validate = $this->validate($request, [
-                'login'=> ['required', 'string', 'max: 200'],
-                'password'=> ['required', 'string', 'max:200']
-            ]);
-
+            // получение пользователя и проверка существования
             $user = User::where("login", $request->login)->first();
-
             if (!$user) {
-                return response()->json([
-                    'errors' => 'Пользователя не существует',
-                    // todo сделать auth контроллер
-                ])->setStatusCode(400);
+                return view('auth.login')->
+                with('err',"Поверьте данные, они не соответствуют действительности");
+            }
+            // проверка пароля
+//            dd($request->password,
+//                $user->password,
+//                Hash::check($request->password, $user->password ));
+            if (!Hash::check($request->password, $user->password )) {
+                return view('auth.login')->
+                with('err',"Поверьте данные, они не соответствуют действительности");
             }
 
-            if (Hash::check($request->password, $user->password )) {
-                return response()->json([
-                    'add' => 'pass chech',
-                    // todo сделать chech
-                ])->setStatusCode(200);
-            }
+            return redirect()->route('home');
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -79,8 +56,7 @@ class AuthController extends Controller
     public function create() {
         try {
             return view('auth.adduser')->
-                with('collectionErrors', false)->
-                with('data',$this->registrationInput);
+                with('err', false);
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => "Пользователь не создан",
@@ -90,35 +66,12 @@ class AuthController extends Controller
     }
     public function adduser(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            "login"=>['required', 'string', 'max:10'],
-            "fio"=>['required','string', 'max:200'],
-            "group"=>['required','string', 'max: 25'],
-            "password"=>['required', 'string', 'max:200'],
-        ]);
-
-        if ($validate->fails()) {
-            $errors = $validate->errors()->messages();
-            $collectionErrors = collect([
-                'login'=>$errors['login'][0],
-                'fio'=>$errors['fio'][0],
-                'group'=>$errors['group'][0],
-                'password'=>$errors['password'][0],
-            ]);
-
-            return view('auth.adduser')->
-                with('collectionErrors',$collectionErrors)->
-                with('data',$this->registrationInput);
-        }
-
         try {
-
             $candidate = User::where("login", $request->login)->first();
 
             if ($candidate) {
-                return response()->json([
-                    "error" => "Пользователь уже существует",
-                ])->setStatusCode(400);
+                return view('auth.login')->
+                with('err',"Пользователь уже существует");
             }
 
             $user = User::make([

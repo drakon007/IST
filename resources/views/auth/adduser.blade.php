@@ -26,13 +26,15 @@
                     @endfor
                 @else
                     @for($i = 0; $i < count($data['check']); $i++)
-                        @if ($collectionErrors[$data['check'][$i]])
-                            @include('layouts.inputErrors', [
-                            'check'=> $data['check'][$i],
-                            'label'=> $data['label'][$i],
-                            'error'=> $data['error'][$i]
-                            ])
-                        @endif
+{{--                        @if(array_key_exists($data['check'],$collectionErrors) == true)--}}
+                            @if ($collectionErrors[$data['check'][$i]])
+                                @include('layouts.inputErrors', [
+                                'check'=> $data['check'][$i],
+                                'label'=> $data['label'][$i],
+                                'error'=> $data['error'][$i]
+                                ])
+                            @endif
+{{--                        @endif--}}
                     @endfor
                 @endif
 

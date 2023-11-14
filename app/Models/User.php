@@ -44,9 +44,9 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'password' => 'hashed',
-    ];
+//    protected $casts = [
+//        'password' => 'hashed',
+//    ];
 
     public function roles() {
         return $this->belongsToMany(Role::class);

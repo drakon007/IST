@@ -10,3 +10,7 @@ $label - описание input и placeholder
         id="{{$check}}" name="{{$check}}" type="{{$check}}" placeholder="{{$label}}">
 </div>
 
+@error({{$check}})
+<div class="alert alert-danger">{{ $message }}</div>
+@enderror
+

@@ -10,7 +10,7 @@ class TestController extends Controller
 {
     public function render() {
         $tests = Test::paginate(12);
-        return view('test.home_page')
+        return view('test.home')
             ->with('tests', $tests);
     }
 

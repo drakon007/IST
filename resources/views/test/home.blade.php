@@ -44,47 +44,47 @@
 </div>
 
 <footer class="flex flex-row content-between flex-wrap justify-center">
-        {{--если текущая страница не 1 тогда отрисовать кнопку назад--}}
-        @if($tests->currentPage() > 1)
-            <div>
-                <a href="{{$tests->previousPageUrl()}}"
+    {{--если текущая страница не 1 тогда отрисовать кнопку назад--}}
+    @if($tests->currentPage() > 1)
+        <div>
+            <a href="{{$tests->previousPageUrl()}}"
+               class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
+                <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                     fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                </svg>
+                Предыдущая
+            </a>
+        </div>
+    @endif
+
+    {{--если страниц несколько, тогда вывесити ссылки на них--}}
+    @if($tests->lastPage() >=2)
+        @for ($i = 0; $i < $tests->lastPage(); $i++)
+            <div class="flex">
+                <a href="{{$tests->url($i+1)}}"
                    class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                    <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                         fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M13 5H1m0 0 4 4M1 5l4-4"/>
-                    </svg>
-                    Предыдущая
+                    {{$i+1}}
                 </a>
             </div>
-        @endif
+        @endfor
+    @endif
 
-        {{--если страниц несколько, тогда вывесити ссылки на них--}}
-        @if($tests->lastPage() >=2)
-            @for ($i = 0; $i < $tests->lastPage(); $i++)
-                <div class="flex">
-                    <a href="{{$tests->url($i+1)}}"
-                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                        {{$i+1}}
-                    </a>
-                </div>
-            @endfor
-        @endif
-
-{{--        если это не последняя страница, отрисовать кнопку далее--}}
-        @if($tests->currentPage() < $tests->lastPage())
-            <div>
-                <a href="{{$tests->nextPageUrl()}}"
-                   class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                    Следущая
-                    <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                         fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>
-            </div>
-        @endif
+    {{--        если это не последняя страница, отрисовать кнопку далее--}}
+    @if($tests->currentPage() < $tests->lastPage())
+        <div>
+            <a href="{{$tests->nextPageUrl()}}"
+               class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
+                Следущая
+                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                     fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+        </div>
+    @endif
 </footer>
 </body>
 </html>
