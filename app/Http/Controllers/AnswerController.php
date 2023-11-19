@@ -2,25 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AnswerRequest;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Answer;
 
 class AnswerController extends Controller
 {
-    public function createForQuestion($idQuestion, Request $request) {
+    public function createForQuestion($idQuestion, AnswerRequest $request) {
            try {
-            $this->validate($request, [
-                "answer"=> ["required", "string"],
-                "column"=> ["required", "string"],
-                "balls"=> ["required", "int"],
-            ]);
-
             $question = Question::find($idQuestion);
             if(!$question) {
-                return response()->json([
-                    "error"=>"Вопрос к которому надо добавить ответ не найден"
-                ])->setStatusCode(400);
+                return view('answer.create')->
+                with('err',"Вопрос к которому надо добавить ответ не найден");
             }
 
             $answer = Answer::make([
@@ -31,9 +25,12 @@ class AnswerController extends Controller
             ]);
             $answer->save();
 
-            return response()->json([
-                "message"=>"Ответ добавлен к вопросу",
-            ]);
+               session([
+                   'message' => 'Ответ добавлен'
+               ]);
+
+               $testId = $question->test->id;
+               return redirect()->route('edit', $testId);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -42,6 +39,21 @@ class AnswerController extends Controller
             ])->setStatusCode(400);
         }
     }
+
+    public function addAnswer($idQuestion) {
+        try {
+            $question = Question::find($idQuestion);
+            return view('answer.create')->
+                with('question',$question)->
+            with('err',false);
+        }catch (\Throwable $th) {
+            return response()->json([
+                "error" => "Ответ не добавлен",
+                "description" => $th->getMessage()
+            ])->setStatusCode(400);
+        }
+    }
+
     public function update($idAnswer, Request $request) {
         try {
             $this->validate($request, [

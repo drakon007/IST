@@ -29,6 +29,9 @@ class ComposerServiceProvider extends ServiceProvider
            $view->with(['answers' => Answer::get()]);
         });
 
+        View::composer('question.question', function ($view) {
+            $view->with(['questions' => Question::get()]);
+        });
 
     }
 }

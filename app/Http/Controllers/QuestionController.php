@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
@@ -15,7 +16,7 @@ class QuestionController extends Controller
                     "error" => 'Теста не существует',
                 ])->setStatusCode(400);
             }
-// todo узнать, через модель или связь
+//            todo узнать, через модель или связь
 //            $questions = [];
 //            foreach ($test->questions as $question) {
 //                array_push($questions, $question);
@@ -34,12 +35,8 @@ class QuestionController extends Controller
         }
     }
 
-    public function createForTest($idTest, Request $request) {
+    public function createForTest($idTest, QuestionRequest $request) {
         try {
-            $this->validate($request, [
-                "question" => ['required','string'],
-            ]);
-
             $test = Test::find($idTest);
             if (!$test) {
                 return response()->json([
@@ -53,9 +50,11 @@ class QuestionController extends Controller
             ]);
             $question->save();
 
-            return response()->json([
-                 "message" => "Вопрос добавлен к тесту"
+            session([
+               "message" => "Вопрос добавлен"
             ]);
+
+            return redirect()->route('edit', $test->id);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -105,16 +104,44 @@ class QuestionController extends Controller
                     "error" => 'Вопроса не существует',
                 ])->setStatusCode(400);
             }
-
+            $answers = $question->answers();
+            foreach ($answers as $answer) {
+                $answer->delete();
+            }
+            $test_id = $question->test->id;
             $question->delete();
 
-            return response()->json([
-                'message' => "Вопрос удален",
-            ])->setStatusCode(400);
+            session([
+                'message' => 'Вопрос удален'
+            ]);
+
+            return redirect()
+                ->route('edit', $test_id);
 
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => "Вопрос не удален",
+                "descriptions" => $th
+            ])->setStatusCode(400);
+        }
+    }
+
+    public function addQuestion ($idTest, Request $request) {
+        try {
+            $test = Test::find($idTest);
+            if (!$test) {
+                return response()->json([
+                    "error" => 'Теста не существует',
+                ])->setStatusCode(400);
+            }
+
+            return view('question.create')->
+                with('err',false)->
+                with('test', $test);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "вопросы не получены",
                 "descriptions" => $th
             ])->setStatusCode(400);
         }

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Collection;
+use App\Models\Role;
+
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -32,16 +35,33 @@ class AuthController extends Controller
             $user = User::where("login", $request->login)->first();
             if (!$user) {
                 return view('auth.login')->
-                with('err',"Поверьте данные, они не соответствуют действительности");
+                with('err',"Пользователя не существует");
             }
-            // проверка пароля
-//            dd($request->password,
-//                $user->password,
-//                Hash::check($request->password, $user->password ));
+
             if (!Hash::check($request->password, $user->password )) {
                 return view('auth.login')->
-                with('err',"Поверьте данные, они не соответствуют действительности");
+                with('err',"Поверьте пароль");
             }
+
+            foreach ($user->roles as $role) {
+                if ($role->name == 'admin') {
+                    $userRole = 'admin';
+                    break;
+                }
+                if ($role->name == 'psychologist') {
+                    $userRole = 'psychologist';
+                    break;
+                }
+                $userRole = 'user';
+            }
+
+            session([
+                'id'=> $user->id,
+                'login'=>$user->login,
+                'role'=>$userRole,
+            ]);
+
+            Auth::login($user);
 
             return redirect()->route('home');
 
@@ -64,13 +84,13 @@ class AuthController extends Controller
             ])->setStatusCode(400);
         }
     }
-    public function adduser(Request $request)
+    public function adduser(AddRequest $request)
     {
         try {
             $candidate = User::where("login", $request->login)->first();
 
             if ($candidate) {
-                return view('auth.login')->
+                return view('auth.adduser')->
                 with('err',"Пользователь уже существует");
             }
 
@@ -82,11 +102,18 @@ class AuthController extends Controller
                 'password'=> Hash::make($request->password)
             ]);
             $user->save();
+            $role =  Role::where('name','user')->first();
+            $user->roles()->attach($role->id);
 
-            return response()->json([
-                'message' => "Пользователь создан",
-                'user'=>$user
+            session([
+                'id'=> $user->id,
+                'login'=>$user->login,
+                'role'=>$role->name
             ]);
+
+            Auth::login($user);
+
+            return redirect()->route('home');
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -96,73 +123,20 @@ class AuthController extends Controller
         }
     }
 
+    public function logout() {
+        try {
+            session()->flush();
+            Auth::logout();
+            session()->invalidate();
+            session()->regenerateToken();
+            return view('auth.login')->with('err',false);
+        }catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "Ошибка при выход пользователя",
+                "description" => $th
+            ])->setStatusCode(400);
+        }
+    }
+
 }
 
-//
-//use Illuminate\Http\Request;
-//use App\Models\User;
-//use Illuminate\Http\Response;
-//use Illuminate\Support\Facades\Hash;
-/////
-//public function sign_up(Request $request){
-//    $data = $request->validate([
-//        'name' => 'required|string',
-//        'email' => 'required|string|unique:users,email',
-//        'password' => 'required|string|confirmed'
-//    ]);
-//
-//    $user = User::create([
-//        'name' => $data['name'],
-//        'email' => $data['email'],
-//        'password' => bcrypt($data['password'])
-//    ]);
-//
-//    $token = $user->createToken('apiToken')->plainTextToken;
-//
-//    $res = [
-//        'user' => $user,
-//        'token' => $token
-//    ];
-//    return response($res, 201);
-//}
-//
-//public function login(Request $request)
-//{
-//    $data = $request->validate([
-//        'email' => 'required|string',
-//        'password' => 'required|string'
-//    ]);
-//
-//    $user = User::where('email', $data['email'])->first();
-//
-//    if (!$user || !Hash::check($data['password'], $user->password)) {
-//        return response([
-//            'msg' => 'incorrect username or password'
-//        ], 401);
-//    }
-//
-//    $token = $user->createToken('apiToken')->plainTextToken;
-//
-//    $res = [
-//        'user' => $user,
-//        'token' => $token
-//    ];
-//
-//    return response($res, 201);
-//}
-//
-//public function logout(Request $request)
-//{
-//    auth()->user()->tokens()->delete();
-//    return [
-//        'message' => 'user logged out'
-//    ];
-//}
-//
-//
-//7)	api.php
-//Route::post('/signup', [AuthController::class, 'sign_up']);
-//Route::post('/login', [AuthController::class, 'login']);
-//
-//Route::group(['middleware' => ['auth:sanctum']], function () {
-//    Route::post('/logout', [AuthController::class, 'logout']);

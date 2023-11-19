@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TestRequest;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Status;
@@ -9,36 +10,61 @@ use App\Models\Status;
 class TestController extends Controller
 {
     public function render() {
-        $tests = Test::paginate(12);
-        return view('test.home')
-            ->with('tests', $tests);
+        try {
+            $tests = Test::paginate(12);
+            return view('test.home')
+                ->with('tests', $tests);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "description" => $th
+            ]);
+        }
     }
 
-    public function create(request $request) {
+    public function edit($idTest) {
         try {
-            $this->validate($request, [
-                'type'=> ['required', 'integer', 'max:200'],
-                'name'=>['required', 'string', 'max:200'],
+            $test = Test::find($idTest);
+            return view('test.editing')
+                ->with('test', $test);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "description" => $th
             ]);
+        }
+    }
 
+    public function addTest() {
+        try {
+            return view('test.create')->
+            with('err',false);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "description" => $th
+            ]);
+        }
+    }
+
+    public function create(TestRequest $request) {
+        try {
             $candidates = Test::where('name', $request->name)->first();
             if ($candidates) {
-                return response()->json([
-                    'errors'=>"Тест уже существует",
-                ])->setStatusCode(400);
+                return view('test.create')->
+                with('err', "Тест уже существует");
             }
 
+            $status = Status::where('status', 'active')->first();
             $test = Test::make([
                 'type' => $request->type,
                 'name' => $request->name,
-                'status_id' => 1,
+                'status_id' => $status->id
             ]);
             $test->save();
 
-
-            return response()->json([
-                'message' => 'Тест создан'
+            session([
+                'message' => 'Тест добавлен'
             ]);
+
+            return redirect()->route('home');
         }catch(\Throwable $th) {
             return response()->json([
                 'errors'=>'Тест не добавлен',

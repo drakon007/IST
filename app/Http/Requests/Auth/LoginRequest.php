@@ -32,24 +32,6 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-//    public function authenticate(): void
-//    {
-//        $this->ensureIsNotRateLimited();
-//
-//        if (! Auth::attempt($this->only('login', 'password'), $this->boolean('remember'))) {
-//            RateLimiter::hit($this->throttleKey());
-//
-//            throw ValidationException::withMessages([
-//                'login' => trans('auth.failed'),
-//            ]);
-//        }
-//
-//        RateLimiter::clear($this->throttleKey());
-//    }
+
 
 }
