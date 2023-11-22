@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answer_users', function (Blueprint $table) {
+        Schema::create('answer_user_answer', function (Blueprint $table) {
             $table->id();
-            $table->integer('result_id');
+            $table->integer('answer_user_id');
             $table->integer('answer_id');
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answer_users');
+        Schema::dropIfExists('answer_user_answer');
     }
 };

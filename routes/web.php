@@ -6,7 +6,6 @@ use App\Http\Controllers\InterpretationController;
 use App\Http\Controllers\QuestionController;
 //use App\Http\Controllers\ResultController;
 use App\Http\Controllers\TestController;
-//use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
@@ -40,17 +39,19 @@ Route::prefix('test')->group(function () {
         Route::get('/render', 'render')->name('home')->middleware('auth');
         Route::get('/add', 'addTest')->name('addTest')->middleware('auth');
         Route::post('/create', 'create')->name('create')->middleware('auth');
-        Route::put('/update/{id_test}', 'update');
-        Route::delete('/delete/{id_test}', 'delete');
+        Route::get('/updatepage/{id_test}', 'updatePage')->name('updatePageTest')->middleware('auth');
+        Route::put('/update/{id_test}', 'update')->name('updateTest')->middleware('auth');
+        Route::get('/delete/{id_test}', 'delete')->name('deleteTest')->middleware('auth');
     });
 });
 
-Route::prefix('question')->group( function () {
-    Route::controller(QuestionController::class)->group(function() {
+Route::prefix('question')->group( callback: function () {
+    Route::controller(QuestionController::class)->group(callback: function() {
         Route::get('/get/{id_test}', 'getForTest')->name('getForTest')->middleware('auth');
         Route::get('/add/{id_test}', 'addQuestion')->name('addQuestion')->middleware('auth');
         Route::post('/create/{id_test}', 'createForTest')->name('createForTest')->middleware('auth');
-        Route::put('/update/{id_question}', 'update');
+        Route::get('/updatepage/{id_question}', 'updatePage')->name('updatePageQuestion')->middleware('auth');
+        Route::put('/update/{id_question}', 'update')->name('updateQuestion')->middleware('auth');
         Route::get('/delete/{id_question}', 'delete')->name('deleteQuestion')->middleware('auth');
     });
 });
@@ -65,23 +66,10 @@ Route::prefix('answer')->group(function () {
     });
 });
 
+ Route::controller(ResultController::class)->group(function() {
+
+ });
 
 
-// Route::controller(InterpretationController::class)->group(function() {
-
-// });
-
-
-// Route::controller(ResultController::class)->group(function() {
-
-// });
-
-// Route::controller(TestController::class)->group(function() {
-
-// });
-
-// Route::controller(UserController::class)->group(function() {
-
-// });
 
 

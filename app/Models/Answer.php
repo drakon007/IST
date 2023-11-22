@@ -21,7 +21,8 @@ class Answer extends Model
     protected $hidden = [
         'question_id',
         'column',
-        'balls'
+        'balls',
+        'question_id',
     ];
 
     public function question() {

@@ -6,6 +6,8 @@ use App\Http\Requests\QuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
+use App\Models\Answer;
+
 class QuestionController extends Controller
 {
     public function getForTest($idTest) {
@@ -63,14 +65,23 @@ class QuestionController extends Controller
             ])->setStatusCode(400);
         }
     }
-
-    public function update($idQuestion, Request $request) {
+    public function updatePage($idQuestion) {
         try {
+            $question = Question::find($idQuestion);
+            return view('question.update')->
+            with('question',$question)->
+            with("err",false);
 
-            $this->validate($request, [
-                "question" => ['required','string'],
-            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "",
+                "descriptions" => $th
+            ])->setStatusCode(400);
+        }
+    }
 
+    public function update($idQuestion, QuestionRequest $request) {
+        try {
             $question = Question::find($idQuestion);
 
             if (!$question) {
@@ -84,9 +95,12 @@ class QuestionController extends Controller
             ]);
             $question->save();
 
-            return response()->json([
-                "message" => "Вопрос был изменен",
+            session([
+                "message" => "Вопрос изменен"
             ]);
+            $test_id = $question->test->id;
+
+            return redirect()->route('edit', $test_id);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -104,10 +118,8 @@ class QuestionController extends Controller
                     "error" => 'Вопроса не существует',
                 ])->setStatusCode(400);
             }
-            $answers = $question->answers();
-            foreach ($answers as $answer) {
-                $answer->delete();
-            }
+
+            Answer::where('question_id', $question->id)->delete();
             $test_id = $question->test->id;
             $question->delete();
 

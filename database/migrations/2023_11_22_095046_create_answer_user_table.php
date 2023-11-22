@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('results', function (Blueprint $table) {
+        Schema::create('answer_user', function (Blueprint $table) {
             $table->id();
-            $table->longText('result'); // полученая интерпретация
+            $table->integer('result_id')->default(null); // id результата
+            $table->integer('test_id'); // id теста
             $table->integer('user_id'); // id пользователя
+            $table->integer('attempts'); // попытки
+            $table->integer('status_id'); // статус
+            $table->timestamps();
         });
     }
 
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('results');
+        Schema::dropIfExists('answer_user');
     }
 };

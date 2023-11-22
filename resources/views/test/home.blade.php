@@ -21,7 +21,7 @@
 @endif
 
 <div class="container  mx-auto  py-6 lg:px-32 lg:pt-12">
-    <div class="flex flex-wrap ">
+    <div class="flex flex-wrap">
         @foreach ($tests as $test)
             <div class="flex w-full lg:w-1/2 md:w-1/3 xl:w-1/3 flex-wrap">
                 <div class="w-full rounded flex flex-col justify-center items-center text-center">
@@ -34,16 +34,16 @@
                     <div class="text-center md:text-left px-6 pt-4 pb-2  text-xl md:text-base">
                         @if ($test->status_id == "1")
                             @if (session('role') == 'admin' || session('role') == 'psuchologist')
-                                <a href="{{route('getForTest', $test->id)}}">
+                                <a href="{{route('deleteTest', $test->id)}}">
                                     <button
-                                        class="bg-blue-500 hover:bg-blue-700 text-white rounded-full px-3 py-1  font-semibold text-gray-700 mr-2 mb-2"
+                                        class="bg-red-700 text-white hover:bg-red-800 font-medium  rounded-full text-sm px-3 py-1 mr-2 mb-2 dark:bg-red-600 "
                                         type="button">
                                         Удалить
                                     </button>
                                 </a>
                                 <a href="{{route("edit",$test->id)}}">
                                     <button
-                                        class="bg-blue-500 hover:bg-blue-700 text-white rounded-full px-3 py-1  font-semibold text-gray-700 mr-2 mb-2"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white rounded-full text-sm font-semibold px-3 py-1 mr-2 mb-2"
                                         type="button">
                                         Редактировать
                                     </button>
@@ -51,7 +51,7 @@
                             @else
                                 <a href="{{route('getForTest', $test->id)}}">
                                     <button
-                                        class="bg-blue-500 hover:bg-blue-700 text-white rounded-full px-3 py-1  font-semibold text-gray-700 mr-2 mb-2"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white rounded-full font-semibold  px-3 py-1 mr-2 mb-2"
                                         type="button">
                                         Пройти
                                     </button>
@@ -69,20 +69,22 @@
 </div>
 
 <footer class="flex mt-12 flex-row content-between flex-wrap justify-evenly">
-    <div class="rounded flex flex-col self-start text-center">
-        <a href="{{route('addTest')}}"
-           class="relative inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-blue-700 bg-blue-500 text-white">
-            Добавить тест
-            <svg class="w-6 h-6 ml-4 text-gray-800 dark:text-white" aria-hidden="true"
-                 xmlns="http://www.w3.org/2000/svg"
-                 fill="currentColor" viewBox="0 0 20 20">
-                <path
-                    d="M18 2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2ZM2 18V7h6.7l.4-.409A4.309 4.309 0 0 1 15.753 7H18v11H2Z"/>
-                <path
-                    d="M8.139 10.411 5.289 13.3A1 1 0 0 0 5 14v2a1 1 0 0 0 1 1h2a1 1 0 0 0 .7-.288l2.886-2.851-3.447-3.45ZM14 8a2.463 2.463 0 0 0-3.484 0l-.971.983 3.468 3.468.987-.971A2.463 2.463 0 0 0 14 8Z"/>
-            </svg>
-        </a>
-    </div>
+    @if (session('role') == 'admin' || session('role') == 'psuchologist')
+        <div class="rounded flex flex-col self-start text-center">
+            <a href="{{route('addTest')}}"
+               class="relative inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-blue-700 bg-blue-500 text-white">
+                Добавить тест
+                <svg class="w-6 h-6 ml-4 text-gray-800 dark:text-white" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M18 2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2ZM2 18V7h6.7l.4-.409A4.309 4.309 0 0 1 15.753 7H18v11H2Z"/>
+                    <path
+                        d="M8.139 10.411 5.289 13.3A1 1 0 0 0 5 14v2a1 1 0 0 0 1 1h2a1 1 0 0 0 .7-.288l2.886-2.851-3.447-3.45ZM14 8a2.463 2.463 0 0 0-3.484 0l-.971.983 3.468 3.468.987-.971A2.463 2.463 0 0 0 14 8Z"/>
+                </svg>
+            </a>
+        </div>
+    @endif
     <div class="flex flex-row content-between flex-wrap">
         {{--если текущая страница не 1 тогда отрисовать кнопку назад--}}
         @if($tests->currentPage() > 1)

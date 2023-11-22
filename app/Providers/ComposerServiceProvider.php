@@ -25,7 +25,7 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot(): void
     {
 //        all view "*"
-        View::composer('layouts.answer', function ($view) {
+        View::composer('answer.answer', function ($view) {
            $view->with(['answers' => Answer::get()]);
         });
 

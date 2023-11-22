@@ -20,11 +20,20 @@
 @endif
 
 <div class="mx-auto  py-6 lg:px-32 lg:pt-12">
-    <h1 class="font-bold mb-2 text-center md:text-left text-4xl md:text-3xl">Вопросы для теста: {{$test->name}}</h1>
+        <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Вопросы для теста: {{$test->name}}</h1>
+         <div class="flex justify-end">
+             <a href="{{route('updatePageTest', $test->id)}}"
+                class="focus:outline-none text-white font-medium bg-blue-500 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                 <button>
+                     Изменить название теста
+                 </button>
+             </a>
+         </div>
+
     @include('question.question', ["test_id"=>$test->id])
     <div class="rounded flex flex-col self-start text-center">
         <a href="{{route('addQuestion', $test->id)}}"
-           class="relative inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-blue-700 bg-blue-500 text-white">
+           class="relative inline-flex items-center justify-between rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-blue-700 bg-blue-500 text-white">
             Добавить вопрос к тесту
             <svg class="w-6 h-6 ml-4 text-gray-800 dark:text-white" aria-hidden="true"
                  xmlns="http://www.w3.org/2000/svg"

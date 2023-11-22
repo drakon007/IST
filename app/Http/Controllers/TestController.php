@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TestRequest;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Status;
+use App\Models\Answer;
 
 class TestController extends Controller
 {
@@ -74,12 +76,8 @@ class TestController extends Controller
 
     }
 
-    public function update($idTest, Request $request) {
+    public function update($idTest, TestRequest $request) {
         try {
-            $this->validate($request, [
-                'name'=>['required', 'string', 'max:200'],
-            ]);
-
             $test = Test::find($idTest);
             if (!$test) {
                 return response()->json([
@@ -92,13 +90,30 @@ class TestController extends Controller
             ]);
             $test->save();
 
-            return response()->json([
+            session([
                 'message'=>'Тест обновлен'
             ]);
+
+            return redirect()->route('edit', $test->id);
         }catch(\Throwable $th) {
             return response()->json([
                 'errors'=>'Тест не обновлен',
                 'descriptions'=>$th
+            ])->setStatusCode(400);
+        }
+    }
+
+    public function updatePage($idTest) {
+        try {
+            $test = Test::find($idTest);
+            return view('test.update')->
+            with('test',$test)->
+            with("err",false);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => "",
+                "descriptions" => $th
             ])->setStatusCode(400);
         }
     }
@@ -111,12 +126,21 @@ class TestController extends Controller
                     'errors'=>"Теста не существует",
                 ])->setStatusCode(400);
             }
+            $questions = Question::where('test_id', $test->id)->get();
+            if ($questions) {
+                foreach ($questions as $question) {
+                    Answer::where('question_id', $question->id)->delete();
+                    $question->delete();
+                }
+            }
             $test->interpretations()->detach();
             $test->delete();
 
-            return response()->json([
-                'message'=>"Теста удален",
+            session([
+                'message' => 'Тест удален'
             ]);
+
+            return redirect()->route('home');
         }catch(\Throwable $th) {
             return response()->json([
                 'errors'=>'Тест не удален',
