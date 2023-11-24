@@ -9,20 +9,22 @@ class AnswerUser extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'result_id',
         'test_id',
         'user_id',
-        'attempts',
-        'status_id',
+        'status',
+        'start_at',
+        'end_at',
     ];
 
     protected $hidden = [
-        'result_id',
         'test_id',
         'user_id',
-        'attempts',
-        'status_id',
+        'status',
+        'start_at',
+        'end_at',
     ];
 
     public function answers() {

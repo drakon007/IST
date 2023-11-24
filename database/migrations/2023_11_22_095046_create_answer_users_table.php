@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answer_user', function (Blueprint $table) {
+        Schema::create('answer_users', function (Blueprint $table) {
             $table->id();
-            $table->integer('result_id')->default(null); // id результата
             $table->integer('test_id'); // id теста
             $table->integer('user_id'); // id пользователя
-            $table->integer('attempts'); // попытки
-            $table->integer('status_id'); // статус
-            $table->timestamps();
+            $table->enum('status', ['passed', 'failed'])->default('failed');
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('end_at')->nullable();
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answer_user');
+        Schema::dropIfExists('answer_users');
     }
 };
