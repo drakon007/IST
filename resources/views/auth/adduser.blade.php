@@ -15,7 +15,7 @@
     <div class="flex mx-auto sm:w-full flex-col">
         <div class="px-5 xl:w-1/3 md:w-1/2 sm:w-full  mx-auto py-2 lg:px-32 lg:pt-12">
             <form method="POST" action="{{ route('adduser') }}" class="w-full">
-                @method('post')
+                @method('POST')
                 @csrf
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="login">Логин</label>

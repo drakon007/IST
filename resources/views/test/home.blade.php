@@ -32,7 +32,7 @@
                         {{--// todo если надо будет добавить описание к тесту--}}
                     </div>
                     <div class="text-center md:text-left px-6 pt-4 pb-2  text-xl md:text-base">
-                        @if ($test->status_id == "1")
+                        @if ($test->status == "active")
                             @if (session('role') == 'admin' || session('role') == 'psuchologist')
                                 <a href="{{route('deleteTest', $test->id)}}">
                                     <button
@@ -49,7 +49,7 @@
                                     </button>
                                 </a>
                             @else
-                                <a href="{{route('getForTest', $test->id)}}">
+                                <a href="{{route('startTestPage', $test->id)}}">
                                     <button
                                         class="bg-blue-500 hover:bg-blue-700 text-white rounded-full font-semibold  px-3 py-1 mr-2 mb-2"
                                         type="button">

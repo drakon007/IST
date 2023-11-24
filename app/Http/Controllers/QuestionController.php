@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\AnswerUser;
 
 class QuestionController extends Controller
 {
@@ -18,16 +19,10 @@ class QuestionController extends Controller
                     "error" => 'Теста не существует',
                 ])->setStatusCode(400);
             }
-//            todo узнать, через модель или связь
-//            $questions = [];
-//            foreach ($test->questions as $question) {
-//                array_push($questions, $question);
-//            }
-
             $questions = Question::where('test_id', $test->id)->paginate(1);
 
             return view('test.testing')
-                ->with('questions', $questions);
+                ->with('questions', $questions)->with('err', false);
 
         } catch (\Throwable $th) {
             return response()->json([
