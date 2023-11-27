@@ -14,16 +14,21 @@ class  Interpretation extends Model
     protected $fillable = [
         'description',
         'max',
-        'min'
+        'min',
+        'column',
+        'degree'
     ];
 
     protected $hidden = [
         'max',
         'min',
         'test_id',
+        'column',
+        'degree'
     ];
 
-    public function tests() {
+    public function tests()
+    {
         return $this->belongsToMany(Test::class);
     }
 }

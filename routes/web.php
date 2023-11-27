@@ -9,7 +9,9 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-    return view('welcome');
+//    return view('welcome');
+
+    return redirect()->route('home');
 });
 
 Route::prefix('auth')->group(function () {
@@ -25,11 +27,13 @@ Route::prefix('auth')->group(function () {
 Route::prefix('interpretation')->group(function () {
     Route::controller(InterpretationController::class)->group(function () {
         Route::get('/render/{id_test}', 'render')->name('renderInter')->middleware('auth');
-        Route::get('/get/{id_test}', 'getForTest');
-        Route::post('/create/{id_test}', 'createForTest');
-        Route::delete('/delete/{id_test}/{id_interpretation}', 'deleteForTestOne');
+        Route::get('/get/{id_test}', 'getForTest')->name('getForTestInter')->middleware('auth');
+        Route::get('/create/{id_test}', 'createPage')->name('createPageInter')->middleware('auth');
+        Route::post('/create/{id_test}', 'createForTest')->name('createInterForTest')->middleware('auth');
+        Route::get('/delete/{id_test}/{id_interpretation}', 'deleteForTestOne')->name('deleteInterForTest')->middleware('auth');
         Route::delete('/delete/{id_test}', 'deleteForTestAll');
         Route::put('/update/{id_interpretation}', 'update');
+        Route::get('/results/{id_user}', 'getResults')->name('results')->middleware('auth');
     });
 });
 

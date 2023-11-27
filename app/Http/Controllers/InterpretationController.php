@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InterpretationRequest;
 use Illuminate\Http\Request;
 use App\Models\Interpretation;
 use App\Models\Test;
-
+use App\Models\User;
+use App\Models\AnswerUser;
+use Illuminate\Support\Facades\DB;
 class InterpretationController extends Controller
 {
     public function render()
@@ -36,10 +39,9 @@ class InterpretationController extends Controller
                 array_push($interpretations, $interpretation);
             }
 
-            return response()->json([
-                'message' => "Интерпритации для теста",
-                'interpretations' => $interpretations
-            ]);
+            return view('interpretation.edit')->
+            with('test', $test)->
+            with('interpretations', $interpretations);
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => "Интерпритаций для этого теста не получены",
@@ -49,33 +51,42 @@ class InterpretationController extends Controller
 
     }
 
-    public function createForTest($idTest, Request $request)
+    public function createPage($idTest) {
+        try {
+            return view('interpretation.create')->
+            with('id_test', $idTest)->
+            with('err', false);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "description" => $th->getMessage()
+            ])->setStatusCode(400);
+        }
+    }
+
+    public function createForTest($idTest, InterpretationRequest $request)
     {
         try {
-            $this->validate($request, [
-                "description" => ['required', 'string'],
-                "min" => ['required', 'integer'],
-                "max" => ['required', 'integer'],
-            ]);
-
             $test = Test::find($idTest);
             if (!$test) {
                 return response()->json([
                     'error' => "Теста не существует, к нему нельзя добавить интерпретацию"
                 ])->setStatusCode(400);
             }
-
             $interpretations = Interpretation::make([
                 'description' => $request->description,
                 'min' => $request->min,
-                'max' => $request->max
+                'max' => $request->max,
+                'column' => $request->column,
+                'degree' => $request->degree,
             ]);
             $interpretations->save();
             $interpretations->tests()->attach($test->id);
 
-            return response()->json([
-                'message' => "интерпертация добавлена",
+            session([
+                'message' => 'Интерпретация добавлена'
             ]);
+
+            return redirect()->route('getForTestInter', $idTest);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -96,10 +107,12 @@ class InterpretationController extends Controller
                 ])->setStatusCode(400);
             }
             $test->interpretations()->detach($idInterpretation);
-
-            return response()->json([
-                'message' => "интерпертация удалена",
+            Interpretation::find($idInterpretation)->delete();
+            session([
+                'message' => 'Интерпретация удалена'
             ]);
+
+            return redirect()->route('getForTestInter', $idTest);
         }catch (\Throwable $th) {
             return response()->json([
                 'errors' => "Интерпритация не удалена",
@@ -194,5 +207,17 @@ class InterpretationController extends Controller
         }
 
 
+    }
+
+    public function getResults($idUser) {
+        $user = User::find($idUser);
+        $role = $user->roles[0]->name;
+        if ($role == 'admin' || $role == 'psychologist') {
+            $answerUsers = AnswerUser::where('end_at', '!=', null)->get();
+            return view('test.results')->with('answerUsers', $answerUsers);
+        } else {
+            $answerUsers = AnswerUser::where('end_at', '!=', null)->where('user_id', $user->id)->get();
+            return view('test.results')->with('answerUsers', $answerUsers);
+        }
     }
 }

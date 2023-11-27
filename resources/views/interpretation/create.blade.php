@@ -9,31 +9,56 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-
+@include('layouts.header')
 <main class="contener h-screen w-screen bg-bgpage flex justify-items-center items-center">
     <!--поле для формы и лого-->
     <div class="flex mx-auto sm:w-full flex-col">
         <div class="px-5 xl:w-1/3 md:w-1/2 sm:w-full  mx-auto py-2 lg:px-32 lg:pt-12">
-            <form method="POST" action="{{ route('createForTest') }}" class="w-full">
+            <form method="POST" action="{{ route('createInterForTest', $id_test) }}" class="w-full">
                 @method('post')
                 @csrf
 
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="type">Тип теста</label>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Описание интерпертации</label>
                 <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('type') is-invalid @enderror"
-                    id="type" name="type" type="text" placeholder="тип теста">
-                @error('type')
-                <p class="text-red-500 text-xs italic">Тип теста введен не корректно</p>
-                @enderror
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Название теста</label>
-                <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('name') is-invalid @enderror"
-                    id="name" name="name" type="text" placeholder="Название теста">
-                @error('name')
-                <p class="text-red-500 text-xs italic">Название теста введено не корректно</p>
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('description') is-invalid @enderror"
+                    id="description" name="description" type="text" placeholder="описание">
+                @error('description')
+                <p class="text-red-500 text-xs italic">Интерпретация введена не корректно</p>
                 @enderror
 
-                @if (!$err == false)
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="column">Название столбца с баллами</label>
+                <input
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('column') is-invalid @enderror"
+                    id="column" name="column" type="text" placeholder="столбец">
+                @error('column')
+                <p class="text-red-500 text-xs italic">Название введено не корректно</p>
+                @enderror
+
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="min">Минимальное колличество баллов</label>
+                <input
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('min') is-invalid @enderror"
+                    id="min" name="min" type="text" placeholder="минимальное">
+                @error('min')
+                <p class="text-red-500 text-xs italic">Колличестов введено не корректно</p>
+                @enderror
+
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="min">Максимальное колличество баллов</label>
+                <input
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('max') is-invalid @enderror"
+                    id="max" name="max" type="text" placeholder="максимальное">
+                @error('max')
+                <p class="text-red-500 text-xs italic">Колличестов введено не корректно</p>
+                @enderror
+
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="min">Степень выраженности</label>
+                <input
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('degree') is-invalid @enderror"
+                    id="degree" name="degree" type="text" placeholder="степень">
+                @error('degree')
+                <p class="text-red-500 text-xs italic">Степень введена не корректно</p>
+                @enderror
+
+                @if (!!$err)
                     <p class="text-red-500 text-xs italic">{{$err}}</p>
                 @endif
 

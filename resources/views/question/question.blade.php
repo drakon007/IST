@@ -16,12 +16,6 @@
                                     Удалить
                                 </button>
                             </a>
-                            <a href="{{route('updatePageQuestion', $question->id)}}"
-                               class="focus:outline-none text-white font-medium bg-blue-500 w-24 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                                <button>
-                                    Изменить
-                                </button>
-                            </a>
                         </div>
                     </div>
                     @include('answer.answer', ['question_id' => $question->id])

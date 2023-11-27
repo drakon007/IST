@@ -20,7 +20,7 @@
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="login">Логин</label>
                 <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('login') is-invalid @enderror"
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('login') is-invalid @enderror"
                     id="login" name="login" type="text" placeholder="логин">
                 @error('login')
                 <p class="text-red-500 text-xs italic">Логин введен не корректно</p>
@@ -28,7 +28,7 @@
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="group">Группа</label>
                 <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('group') is-invalid @enderror"
+                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('group') is-invalid @enderror"
                     id="group" name="group" type="text" placeholder="группа">
                 @error('group')
                 <p class="text-red-500 text-xs italic">Группа введена не корректно</p>
@@ -36,7 +36,7 @@
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="fio">ФИО</label>
                 <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('fio') is-invalid @enderror"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('fio') is-invalid @enderror"
                     id="fio" name="fio" type="text" placeholder="фио">
                 @error('fio')
                 <p class="text-red-500 text-xs italic">Группа введена не корректно</p>
@@ -44,13 +44,13 @@
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Пароль</label>
                 <input
-                    class="shadow appearance-none border text-gray-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('password') is-invalid @enderror"
+                    class="shadow appearance-none border 0 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('password') is-invalid @enderror"
                     id="password" name="password" type="password" placeholder="пароль">
                 @error('password')
                 <p class="text-red-500 text-xs italic">Пароль введен не корректно</p>
                 @enderror
 
-                @if (!$err == false)
+                @if (!!$err)
                     <p class="text-red-500 text-xs italic">{{$err}}</p>
                 @endif
 

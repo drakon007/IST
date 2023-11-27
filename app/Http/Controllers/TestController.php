@@ -8,6 +8,7 @@ use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Answer;
+use App\Models\Interpretation;
 
 class TestController extends Controller
 {

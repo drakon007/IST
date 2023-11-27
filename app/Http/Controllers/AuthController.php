@@ -10,13 +10,10 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
-
 use Illuminate\Support\Facades\Auth;
-
 
 class AuthController extends Controller
 {
-
     public function login()
     {
         try {
@@ -27,7 +24,6 @@ class AuthController extends Controller
             ]);
         }
     }
-
     public function auth(LoginRequest $request)
     {
         try {
@@ -42,7 +38,6 @@ class AuthController extends Controller
                 return view('auth.login')->
                 with('err',"Поверьте пароль");
             }
-
             foreach ($user->roles as $role) {
                 if ($role->name == 'admin') {
                     $userRole = 'admin';
@@ -62,9 +57,7 @@ class AuthController extends Controller
             ]);
 
             Auth::login($user);
-
             return redirect()->route('home');
-
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => "введены не корректные данные",

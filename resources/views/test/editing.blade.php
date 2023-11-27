@@ -29,6 +29,14 @@
                  </button>
              </a>
          </div>
+    <div class="flex justify-end">
+        <a href="{{route('getForTestInter', $test->id)}}"
+           class="focus:outline-none text-white font-medium bg-blue-500 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+            <button>
+                Интерпретации
+            </button>
+        </a>
+    </div>
 
     @include('question.question', ["test_id"=>$test->id])
     <div class="rounded flex flex-col self-start text-center">

@@ -21,10 +21,6 @@ class Test extends Model
         'type'
     ];
 
-    public function results() {
-        return $this->hasMany(Result::class);
-    }
-
     public function interpretations() {
         return $this->belongsToMany(Interpretation::class);
     }
@@ -35,5 +31,9 @@ class Test extends Model
 
     public function status() {
         return $this->belongsTo(Status::class);
+    }
+
+    public function answers_users() {
+        return $this->hasMany(AnswerUser::class);
     }
 }

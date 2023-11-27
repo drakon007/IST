@@ -41,5 +41,8 @@ class AnswerUser extends Model
     public function result() {
         return $this->belongsTo(Result::class);
     }
+    public function test() {
+        return $this->belongsTo(Test::class);
+    }
 
 }
