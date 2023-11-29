@@ -16,10 +16,8 @@ class TestController extends Controller
         try {
             return view('test.start')->with('idTest', $idTest);
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "вопросы не получены",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function start($idTest, $idUser) {
@@ -36,10 +34,8 @@ class TestController extends Controller
             ]);
             return redirect()->route('getForTest', $idTest)->with('idAnswerUser', $answerUser->id);
         }catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "вопросы не получены",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function render() {
@@ -48,9 +44,9 @@ class TestController extends Controller
             return view('test.home')
                 ->with('tests', $tests);
         } catch (\Throwable $th) {
-            return response()->json([
-                "description" => $th
-            ]);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
+            // todo сделать страницу с ошибкой сервера
         }
     }
     public function edit($idTest) {
@@ -59,9 +55,8 @@ class TestController extends Controller
             return view('test.editing')
                 ->with('test', $test);
         } catch (\Throwable $th) {
-            return response()->json([
-                "description" => $th
-            ]);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function addTest() {
@@ -69,9 +64,8 @@ class TestController extends Controller
             return view('test.create')->
             with('err',false);
         } catch (\Throwable $th) {
-            return response()->json([
-                "description" => $th
-            ]);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function create(TestRequest $request) {
@@ -81,23 +75,18 @@ class TestController extends Controller
                 return view('test.create')->
                 with('err', "Тест уже существует");
             }
-
             $test = Test::make([
                 'type' => $request->type,
                 'name' => $request->name,
             ]);
             $test->save();
-
             session([
                 'message' => 'Тест добавлен'
             ]);
-
             return redirect()->route('home');
         }catch(\Throwable $th) {
-            return response()->json([
-                'errors'=>'Тест не добавлен',
-                'descriptions'=>$th
-                ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
 
     }
@@ -105,26 +94,20 @@ class TestController extends Controller
         try {
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    'errors'=>"Теста не существует",
-                ])->setStatusCode(400);
+                session(['error'=>'Теста не существует']);
+                return redirect()->route('home');
             }
-
             $test->update([
                 'name' => $request->name,
             ]);
             $test->save();
-
             session([
                 'message'=>'Тест обновлен'
             ]);
-
             return redirect()->route('edit', $test->id);
         }catch(\Throwable $th) {
-            return response()->json([
-                'errors'=>'Тест не обновлен',
-                'descriptions'=>$th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function updatePage($idTest) {
@@ -133,21 +116,17 @@ class TestController extends Controller
             return view('test.update')->
             with('test',$test)->
             with("err",false);
-
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
     public function delete($idTest) {
         try {
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    'errors'=>"Теста не существует",
-                ])->setStatusCode(400);
+                session(['error'=>'Теста не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
             $questions = Question::where('test_id', $test->id)->get();
             if ($questions) {
@@ -158,17 +137,13 @@ class TestController extends Controller
             }
             $test->interpretations()->detach();
             $test->delete();
-
             session([
                 'message' => 'Тест удален'
             ]);
-
             return redirect()->route('home');
         }catch(\Throwable $th) {
-            return response()->json([
-                'errors'=>'Тест не удален',
-                'descriptions'=>$th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 

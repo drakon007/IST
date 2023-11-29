@@ -64,11 +64,11 @@ Route::prefix('question')->group(function () {
 
 Route::prefix('answer')->group(function () {
     Route::controller(AnswerController::class)->group(function () {
-        Route::get('/get/{id_question}', 'getForQuestion');
+        Route::get('/get/{id_question}', 'getForQuestion'); // no use route
         Route::get('/add/{id_question}', 'addAnswer')->name('addAnswer')->middleware('auth');
         Route::post('/create/{id_question}', 'createForQuestion')->name('createForQuestion');
-        Route::put('/update/{id_answer}', 'update');
-        Route::delete('/delete/{id_answer}', 'delete');
+        Route::put('/update/{id_answer}', 'update'); // no use route
+        Route::delete('/delete/{id_answer}', 'delete'); // no use route
     });
 });
 

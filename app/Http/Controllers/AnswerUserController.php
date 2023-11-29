@@ -15,7 +15,7 @@ class AnswerUserController extends Controller
         try {
             if (!$request->idAnswer) {
                 session([
-                    'message' => "Выберите ответ"
+                    'error' => "Выберите ответ"
                 ]);
                 return redirect()->back();
             }
@@ -25,6 +25,7 @@ class AnswerUserController extends Controller
                 $answer->answerUsers()->attach($idUser);
                 return redirect(session()->pull('next'));
             }
+
             $answer->answerUsers()->attach($idUser);
             $answerUser = AnswerUser::find($idUser);
             date_default_timezone_set('Asia/Irkutsk');
@@ -33,6 +34,7 @@ class AnswerUserController extends Controller
                 'status' => "passed"
             ]);
             $answerUser->save();
+
             session()->forget('answer_user_id');
             session([
                 'message' => 'Тест завершен можно посмотреть результаты'
@@ -40,10 +42,8 @@ class AnswerUserController extends Controller
             return redirect()->route('home');
 
         } catch (\Throwable $th) {
-            return response()->json([
-                "error" => "Ответы для вопроса не получены",
-                "description" => $th->getMessage()
-            ])->setStatusCode(400);
+            session(['error'=>'Тест не завершен, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 

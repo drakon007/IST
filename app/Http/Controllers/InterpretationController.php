@@ -13,15 +13,20 @@ class InterpretationController extends Controller
 {
     public function render()
     {
-        $interpretations = Interpretation::all();
+        try {
+            $interpretations = Interpretation::all();
 
-        if (count($interpretations) == 0) {
+            if (count($interpretations) == 0) {
+                return view('interpretation.render')
+                    ->with('interpretations', "интерпретаций нет");
+            }
+
             return view('interpretation.render')
-                ->with('interpretations', "интерпретаций нет");
+                ->with('interpretations', $interpretations);
+        } catch (\Throwable $th) {
+            session(['error'=>'Тест не завершен, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
-
-        return view('interpretation.render')
-            ->with('interpretations', $interpretations);
     }
 
     public function getForTest($idTest)
@@ -29,9 +34,8 @@ class InterpretationController extends Controller
         try {
             $test = Test::find($idTest);
              if (!$test) {
-                 return response()->json([
-                     'errors' => "Такого теста не существует",
-                 ])->setStatusCode(400);
+                 session(['error'=>'Тест не найден']);
+                 return redirect()->route('home');
              }
 
             $interpretations = [];
@@ -43,10 +47,8 @@ class InterpretationController extends Controller
             with('test', $test)->
             with('interpretations', $interpretations);
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Интерпритаций для этого теста не получены",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
 
     }
@@ -57,9 +59,8 @@ class InterpretationController extends Controller
             with('id_test', $idTest)->
             with('err', false);
         } catch (\Throwable $th) {
-            return response()->json([
-                "description" => $th->getMessage()
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 
@@ -68,9 +69,8 @@ class InterpretationController extends Controller
         try {
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    'error' => "Теста не существует, к нему нельзя добавить интерпретацию"
-                ])->setStatusCode(400);
+                session(['error'=>'Тест не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
             $interpretations = Interpretation::make([
                 'description' => $request->description,
@@ -81,18 +81,13 @@ class InterpretationController extends Controller
             ]);
             $interpretations->save();
             $interpretations->tests()->attach($test->id);
-
             session([
                 'message' => 'Интерпретация добавлена'
             ]);
-
             return redirect()->route('getForTestInter', $idTest);
-
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Интерпритация не создана",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'Тест не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
 
     }
@@ -102,26 +97,35 @@ class InterpretationController extends Controller
         try {
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    'error' => "Теста не существует"
-                ])->setStatusCode(400);
+                session(['error'=>'Тест не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
             $test->interpretations()->detach($idInterpretation);
             Interpretation::find($idInterpretation)->delete();
             session([
                 'message' => 'Интерпретация удалена'
             ]);
-
             return redirect()->route('getForTestInter', $idTest);
         }catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Интерпритация не удалена",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'Тест не удален, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
 
     }
 
+    public function getResults($idUser) {
+        $user = User::find($idUser);
+        $role = $user->roles[0]->name;
+        if ($role == 'admin' || $role == 'psychologist') {
+            $answerUsers = AnswerUser::where('end_at', '!=', null)->get();
+            return view('test.results')->with('answerUsers', $answerUsers);
+        } else {
+            $answerUsers = AnswerUser::where('end_at', '!=', null)->where('user_id', $user->id)->get();
+            return view('test.results')->with('answerUsers', $answerUsers);
+        }
+    }
+
+    // no use function перед использованием добавить обработчик ошибок
     public function deleteForTestAll($idTest)
     {
         try {
@@ -144,7 +148,7 @@ class InterpretationController extends Controller
         }
 
     }
-
+    // no use function перед использованием добавить обработчик ошибок
     public function update($idInterpretation, Request $request)
     {
         try {
@@ -178,7 +182,7 @@ class InterpretationController extends Controller
             ])->setStatusCode(400);
         }
     }
-
+    // no use function перед использованием добавить обработчик ошибок
     public function  addInterpretationForTest($idInterpretation, $idTest)
     {
         try {
@@ -207,17 +211,5 @@ class InterpretationController extends Controller
         }
 
 
-    }
-
-    public function getResults($idUser) {
-        $user = User::find($idUser);
-        $role = $user->roles[0]->name;
-        if ($role == 'admin' || $role == 'psychologist') {
-            $answerUsers = AnswerUser::where('end_at', '!=', null)->get();
-            return view('test.results')->with('answerUsers', $answerUsers);
-        } else {
-            $answerUsers = AnswerUser::where('end_at', '!=', null)->where('user_id', $user->id)->get();
-            return view('test.results')->with('answerUsers', $answerUsers);
-        }
     }
 }
