@@ -16,19 +16,19 @@ class  Interpretation extends Model
         'max',
         'min',
         'column',
-        'degree'
+        'test_id',
     ];
 
     protected $hidden = [
+        'description',
         'max',
         'min',
-        'test_id',
         'column',
-        'degree'
+        'test_id',
     ];
 
-    public function tests()
+    public function test()
     {
-        return $this->belongsToMany(Test::class);
+        return $this->belongsTo(Test::class);
     }
 }

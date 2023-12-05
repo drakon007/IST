@@ -39,7 +39,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('fio') is-invalid @enderror"
                     id="fio" name="fio" type="text" placeholder="фио">
                 @error('fio')
-                <p class="text-red-500 text-xs italic">Группа введена не корректно</p>
+                <p class="text-red-500 text-xs italic">ФИО введено не корректно</p>
                 @enderror
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Пароль</label>

@@ -24,7 +24,7 @@ class AddRequest extends FormRequest
         return [
             "login"=>['required', 'integer','min:1', 'max:999999'],
             "group"=>['required','string','min:1', 'max:200'],
-            "fio"=>['required','string','min:1', 'max: 25'],
+            "fio"=>['required','string','min:1', 'max: 255'],
             "password"=>['required', 'string','min:1', 'max:200'],
         ];
     }

@@ -26,7 +26,6 @@ class InterpretationRequest extends FormRequest
             "min" => ['required', 'integer'],
             "max" => ['required', 'integer'],
             "column" => ['required', 'string'],
-            "degree" => ['required', 'string'],
         ];
     }
 }

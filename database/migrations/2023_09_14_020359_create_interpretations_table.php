@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('min');
             $table->integer('max');
             $table->string('column');
-            $table->string('degree');
+            $table->integer('test_id');
         });
     }
 

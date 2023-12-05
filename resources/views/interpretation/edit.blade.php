@@ -18,6 +18,13 @@
         </div>
     </div>
 @endif
+@if (session()->has('error'))
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="text-sm">{{session()->pull('error')}}</p>
+        </div>
+    </div>
+@endif
 
 <div class="mx-auto  py-6 lg:px-32 lg:pt-12">
     <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Интерпертации для теста: {{$test->name}}</h1>
@@ -38,7 +45,7 @@
                 <div class="flex justify-between">
                     <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
                         <p>
-                            {{ $interpretation->degree }}
+                            Интерпретация номер {{$loop->iteration}}
                         </p>
                     </div>
                     <div class="flex flex-col justify-start">

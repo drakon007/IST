@@ -29,16 +29,27 @@
                         <p>
                             Тест: {{ $answerUser->test->name }}
                         </p>
+                        <p>
+                            Дата завершения: {{ date("Y-m-d H:i" , strtotime($answerUser->end_at)) }}
+                        </p>
 
-                        @foreach($answerUser->answers as $qwe)
-                            <p>на вопрос {{$loop->iteration}} был выбран ответ {{ $qwe->answer }}</p>
+                        @foreach($answerUser->answers as $answer)
+                            <p>на вопрос {{$loop->iteration}} был выбран ответ {{ $answer->answer }}</p>
+                        @endforeach
+                        @foreach($interpretations as $interpretation)
+                            @if (key($interpretation) == $answerUser->end_at)
+                            <p>Получил интерпретацию: {{$interpretation[key($interpretation)]->description}}</p>
+                            @endif
                         @endforeach
 
-                        <p>Получил интерпретацию: {{$answerUser->test->interpretations[0]->description}}</p>
                     </div>
                 </div>
             </article>
         @endforeach
+    @else
+        <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
+           <p>Вы не прошли ни одного теста</p>
+        </div>
     @endif
 </div>
 </body>

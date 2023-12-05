@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\AnswerRequest;
-use Illuminate\Http\Request;
+use App\Models\Interpretation;
 use App\Models\Question;
 use App\Models\Answer;
 
@@ -17,6 +16,12 @@ class AnswerController extends Controller
                 return view('answer.create')->
                 with('err', "Вопрос к которому надо добавить ответ не найден");
             }
+            $idTest = $question->test->id;
+            $interpretation = Interpretation::where('column', $request->column)->first();
+            if (!$interpretation) {
+                session(['error'=>"Ответ не добавлен, интерпретации со столбцом {$request->column} не существует"]);
+                return redirect()->route('edit', $idTest);
+            }
             $answer = Answer::make([
                 "answer" => $request->answer,
                 "column" => $request->column,
@@ -27,10 +32,9 @@ class AnswerController extends Controller
             session([
                 'message' => 'Ответ добавлен'
             ]);
-            $testId = $question->test->id;
-            return redirect()->route('edit', $testId);
+            return redirect()->route('edit', $idTest);
         } catch (\Throwable $th) {
-            session(['error'=>'Ответ недобавлен, что-то пошло не так, обратитесь к системному администратору']);
+            session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
             return redirect()->route('home');
         }
     }
@@ -40,10 +44,9 @@ class AnswerController extends Controller
         try {
             $question = Question::find($idQuestion);
             return view('answer.create')->
-            with('question', $question)->
-            with('err', false);
+            with('question', $question);
         } catch (\Throwable $th) {
-            session(['error'=>'Ответ недобавлен, что-то пошло не так, обратитесь к системному администратору']);
+            session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
             return redirect()->route('home');
         }
     }

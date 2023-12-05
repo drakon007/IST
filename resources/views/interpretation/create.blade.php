@@ -10,12 +10,20 @@
 </head>
 <body>
 @include('layouts.header')
+@if (session()->has('error'))
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+        <div>
+            <p class="text-sm">{{session()->pull('error')}}</p>
+        </div>
+    </div>
+@endif
+
 <main class="contener h-screen w-screen bg-bgpage flex justify-items-center items-center">
     <!--поле для формы и лого-->
     <div class="flex mx-auto sm:w-full flex-col">
         <div class="px-5 xl:w-1/3 md:w-1/2 sm:w-full  mx-auto py-2 lg:px-32 lg:pt-12">
             <form method="POST" action="{{ route('createInterForTest', $id_test) }}" class="w-full">
-                @method('post')
+                @method('POST')
                 @csrf
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Описание интерпертации</label>
@@ -49,18 +57,6 @@
                 @error('max')
                 <p class="text-red-500 text-xs italic">Колличестов введено не корректно</p>
                 @enderror
-
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="min">Степень выраженности</label>
-                <input
-                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('degree') is-invalid @enderror"
-                    id="degree" name="degree" type="text" placeholder="степень">
-                @error('degree')
-                <p class="text-red-500 text-xs italic">Степень введена не корректно</p>
-                @enderror
-
-                @if (!!$err)
-                    <p class="text-red-500 text-xs italic">{{$err}}</p>
-                @endif
 
                 <div class="flex items-center justify-between">
                     <button

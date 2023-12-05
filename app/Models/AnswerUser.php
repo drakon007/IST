@@ -31,16 +31,10 @@ class AnswerUser extends Model
         return $this->belongsToMany(Answer::class);
     }
 
-    public function status() {
-        return $this->belongsTo(Status::class);
-    }
-
     public function user() {
         return $this->belongsTo(User::class);
     }
-    public function result() {
-        return $this->belongsTo(Result::class);
-    }
+
     public function test() {
         return $this->belongsTo(Test::class);
     }

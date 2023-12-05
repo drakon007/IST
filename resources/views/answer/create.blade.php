@@ -45,10 +45,6 @@
                 <p class="text-red-500 text-xs italic">Баллы можно вводить только цифрами</p>
                 @enderror
 
-                @if (!!$err)
-                    <p class="text-red-500 text-xs italic">{{$err}}</p>
-                @endif
-
                 <div class="flex items-center justify-between">
                     <button
                         class=" mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
