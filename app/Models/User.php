@@ -19,8 +19,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'login',
         'password',
+        'login',
+        'fio',
+        'group',
         'token'
     ];
 
@@ -30,11 +32,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'password',
+        'login',
+        'fio',
+        'group',
         'token'
-    ];
-
-    protected $guarded = [
-        'role_id'
     ];
 
     /**
@@ -42,16 +44,9 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'password' => 'hashed',
-    ];
 
     public function roles() {
         return $this->belongsToMany(Role::class);
-    }
-
-    public function results() {
-        return $this->hasMany(Result::class);
     }
 
 }

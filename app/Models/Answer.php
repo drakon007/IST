@@ -21,10 +21,15 @@ class Answer extends Model
     protected $hidden = [
         'question_id',
         'column',
-        'balls'
+        'balls',
+        'question_id',
     ];
 
     public function question() {
         return $this->belongsTo(Question::class);
     }
+    public function answerusers() {
+        return $this->belongsToMany(AnswerUser::class);
+    }
+
 }

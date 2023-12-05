@@ -2,98 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QuestionRequest;
 use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
+use App\Models\Answer;
+use App\Models\AnswerUser;
+
 class QuestionController extends Controller
 {
     public function getForTest($idTest) {
         try {
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    "error" => 'Теста не существует',
-                ])->setStatusCode(400);
+                session(['error'=>'Теста не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
+            $questions = Question::where('test_id', $test->id)->paginate(1);
 
-            $questions = [];
-            foreach ($test->questions as $question) {
-                array_push($questions, $question);
-            }
-
-            return response()->json([
-                "messages" => "вопросы получены",
-                "questions" => $questions
-            ]);
-
+            return view('test.testing')
+                ->with('questions', $questions)->with('err', false);
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "вопросы не получены",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 
-    public function createForTest($idTest, Request $request) {
+    public function createForTest($idTest, QuestionRequest $request) {
         try {
-            $this->validate($request, [
-                "question" => ['required','string'],
-            ]);
-
             $test = Test::find($idTest);
             if (!$test) {
-                return response()->json([
-                    "error" => 'Теста не существует',
-                ])->setStatusCode(400);
+                session(['error'=>'Теста не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
-
             $question = Question::make([
                 "question" => $request->question,
                 "test_id" => $test->id,
             ]);
             $question->save();
-
-            return response()->json([
-                 "message" => "Вопрос добавлен к тесту"
+            session([
+               "message" => "Вопрос добавлен"
             ]);
+            return redirect()->route('edit', $test->id);
+        } catch (\Throwable $th) {
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
+        }
+    }
+    public function updatePage($idQuestion) {
+        try {
+            $question = Question::find($idQuestion);
+            return view('question.update')->
+            with('question',$question)->
+            with("err",false);
 
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 
-    public function update($idQuestion, Request $request) {
+    public function update($idQuestion, QuestionRequest $request) {
         try {
-
-            $this->validate($request, [
-                "question" => ['required','string'],
-            ]);
-
             $question = Question::find($idQuestion);
-
             if (!$question) {
-                return response()->json([
-                    "error" => 'Данного вопроса для теста не существует',
-                ])->setStatusCode(400);
+                session(['error'=>'Вопроса не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
-
             $question->update([
                "question" => $request->question
             ]);
             $question->save();
-
-            return response()->json([
-                "message" => "Вопрос был изменен",
+            session([
+                "message" => "Вопрос изменен"
             ]);
-
+            $test_id = $question->test->id;
+            return redirect()->route('edit', $test_id);
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Вопрос не изменен, проверьте правильность вопроса",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 
@@ -101,22 +88,36 @@ class QuestionController extends Controller
         try {
             $question = Question::find($idQuestion);
             if (!$question) {
-                return response()->json([
-                    "error" => 'Вопроса не существует',
-                ])->setStatusCode(400);
+                session(['error'=>'Вопроса не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
             }
-
+            Answer::where('question_id', $question->id)->delete();
+            $test_id = $question->test->id;
             $question->delete();
-
-            return response()->json([
-                'message' => "Вопрос удален",
-            ])->setStatusCode(400);
-
+            session([
+                'message' => 'Вопрос удален'
+            ]);
+            return redirect()
+                ->route('edit', $test_id);
         } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => "Вопрос не удален",
-                "descriptions" => $th
-            ])->setStatusCode(400);
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
+        }
+    }
+
+    public function addQuestion ($idTest, Request $request) {
+        try {
+            $test = Test::find($idTest);
+            if (!$test) {
+                session(['error'=>'Теста не существует, что-то пошло не так, обратитесь к системному администратору']);
+                return redirect()->route('home');
+            }
+            return view('question.create')->
+                with('err',false)->
+                with('test', $test);
+        } catch (\Throwable $th) {
+            session(['error'=>'что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
 

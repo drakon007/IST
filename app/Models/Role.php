@@ -12,14 +12,11 @@ class Role extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name'
+        'name',
+        'id'
     ];
 
-    protected $hidden = [
-        'name'
-    ];
-
-    public function user() {
+    public function users() {
         return $this->belongsToMany(User::class);
     }
 }

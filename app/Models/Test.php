@@ -14,22 +14,26 @@ class Test extends Model
     protected $fillable = [
         'type',
         'name',
-        'status'
+        'status_id'
     ];
 
     protected $hidden = [
-        'type',
-        'status'
+        'type'
     ];
 
-    public function results() {
-        return $this->hasMany(Result::class);
-    }
     public function interpretations() {
         return $this->belongsToMany(Interpretation::class);
     }
 
     public function questions() {
         return $this->hasMany(Question::class);
+    }
+
+    public function status() {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function answers_users() {
+        return $this->hasMany(AnswerUser::class);
     }
 }

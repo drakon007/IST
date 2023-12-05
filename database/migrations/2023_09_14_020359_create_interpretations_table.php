@@ -16,6 +16,8 @@ return new class extends Migration
             $table->longText('description');
             $table->integer('min');
             $table->integer('max');
+            $table->string('column');
+            $table->integer('test_id');
         });
     }
 

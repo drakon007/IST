@@ -1,71 +1,76 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+use App\Http\Requests\AnswerRequest;
+use App\Models\Interpretation;
 use App\Models\Question;
 use App\Models\Answer;
 
 class AnswerController extends Controller
 {
-    public function createForQuestion($idQuestion, Request $request) {
-           try {
-            $this->validate($request, [
-                "answer"=> ["required", "string"],
-                "column"=> ["required", "string"],
-                "balls"=> ["required", "int"],
-            ]);
-
+    public function createForQuestion($idQuestion, AnswerRequest $request)
+    {
+        try {
             $question = Question::find($idQuestion);
-            if(!$question) {
-                return response()->json([
-                    "error"=>"Вопрос к которому надо добавить ответ не найден"
-                ])->setStatusCode(400);
+            if (!$question) {
+                return view('answer.create')->
+                with('err', "Вопрос к которому надо добавить ответ не найден");
             }
-
+            $idTest = $question->test->id;
+            $interpretation = Interpretation::where('column', $request->column)->first();
+            if (!$interpretation) {
+                session(['error'=>"Ответ не добавлен, интерпретации со столбцом {$request->column} не существует"]);
+                return redirect()->route('edit', $idTest);
+            }
             $answer = Answer::make([
-                "answer"=>$request->answer,
-                "column"=>$request->column,
-                "balls"=>$request->balls,
-                "question_id"=>$question->id
+                "answer" => $request->answer,
+                "column" => $request->column,
+                "balls" => $request->balls,
+                "question_id" => $question->id
             ]);
             $answer->save();
-
-            return response()->json([
-                "message"=>"Ответ добавлен к вопросу",
+            session([
+                'message' => 'Ответ добавлен'
             ]);
-
+            return redirect()->route('edit', $idTest);
         } catch (\Throwable $th) {
-            return response()->json([
-               "error" => "Ответ не добавлен",
-                "description" => $th->getMessage()
-            ])->setStatusCode(400);
+            session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
         }
     }
-    public function update($idAnswer, Request $request) {
-        try {
-            $this->validate($request, [
-                "answer"=> ["required", "string"],
-                "column"=> ["required", "string"],
-                "balls"=> ["required", "int"],
-            ]);
 
+    public function addAnswer($idQuestion)
+    {
+        try {
+            $question = Question::find($idQuestion);
+            return view('answer.create')->
+            with('question', $question);
+        } catch (\Throwable $th) {
+            session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+            return redirect()->route('home');
+        }
+    }
+
+    // no use function перед добавлением отредактировать обработчик ошибок
+    public function update($idAnswer, AnswerRequest $request)
+    {
+        try {
             $answer = Answer::find($idAnswer);
-            if(!$answer) {
+            if (!$answer) {
                 return response()->json([
-                    "error"=>"Ответ не найден"
+                    "error" => "Ответ не найден"
                 ])->setStatusCode(400);
             }
 
             $answer->update([
-                "answer"=>$request->answer,
-                "column"=>$request->column,
-                "balls"=>$request->balls,
+                "answer" => $request->answer,
+                "column" => $request->column,
+                "balls" => $request->balls,
             ]);
             $answer->save();
 
             return response()->json([
-                "message"=>"Ответ к вопросу обновлен",
+                "message" => "Ответ к вопросу обновлен",
             ]);
 
         } catch (\Throwable $th) {
@@ -75,18 +80,19 @@ class AnswerController extends Controller
             ])->setStatusCode(400);
         }
     }
-
-    public function delete($idAnswer) {
+    // no use function перед добавлением отредактировать обработчик ошибок
+    public function delete($idAnswer)
+    {
         try {
             $answer = Answer::find($idAnswer);
-            if(!$answer) {
+            if (!$answer) {
                 return response()->json([
-                    "error"=>"Ответ не найден"
+                    "error" => "Ответ не найден"
                 ])->setStatusCode(400);
             }
             $answer->delete();
             return response()->json([
-                "message"=>"ответ удален"
+                "message" => "ответ удален"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -95,24 +101,25 @@ class AnswerController extends Controller
             ])->setStatusCode(400);
         }
     }
-
-    public function getForQuestion($idQuestion) {
+    // no use function перед добавлением отредактировать обработчик ошибок
+    public function getForQuestion($idQuestion)
+    {
         try {
-         $question = Question::find($idQuestion);
-         if(!$question) {
-             return response()->json([
-                 "error"=> "вопрос не найден, ответы не предостовлены"
-             ])->setStatusCode(400);
-         }
-         $answers =[];
-         foreach ($question->answers as $answer) {
-             array_push($answers,$answer);
-         }
+            $question = Question::find($idQuestion);
+            if (!$question) {
+                return response()->json([
+                    "error" => "вопрос не найден, ответы не предостовлены"
+                ])->setStatusCode(400);
+            }
+            $answers = [];
+            foreach ($question->answers as $answer) {
+                array_push($answers, $answer);
+            }
 
-         return response()->json([
-             "message" => "ответы получены",
-             "array"=> $answers,
-         ]);
+            return response()->json([
+                "message" => "ответы получены",
+                "array" => $answers,
+            ]);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -121,4 +128,5 @@ class AnswerController extends Controller
             ])->setStatusCode(400);
         }
     }
+
 }
