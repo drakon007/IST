@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
 use App\Models\Answer;
-use App\Models\AnswerUser;
 
 class QuestionController extends Controller
 {
@@ -30,13 +29,16 @@ class QuestionController extends Controller
 
     public function createForTest($idTest, QuestionRequest $request) {
         try {
+            //todo сделать в модели вопроса массив с именами картинок
+    $question = request('question-trixFields');
+    $question = str_replace('localhost', '127.0.0.1:8000', $question['content']);
             $test = Test::find($idTest);
             if (!$test) {
                 session(['error'=>'Теста не существует, что-то пошло не так, обратитесь к системному администратору']);
                 return redirect()->route('home');
             }
             $question = Question::make([
-                "question" => $request->question,
+                "question" => $question,
                 "test_id" => $test->id,
             ]);
             $question->save();

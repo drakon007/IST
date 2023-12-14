@@ -5,9 +5,13 @@
                 <div class="w-full">
                     <div class="flex justify-between">
                         <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
-                            <p>
-                                {{ $question->question }}
-                            </p>
+
+                            <div class="trix-content trix-file-accept">
+                                @php
+                                    echo($question->question);
+                                @endphp
+                            </div>
+
                         </div>
                         <div class="flex flex-col justify-start">
                             <a href="{{route('deleteQuestion', $question->id)}}"

@@ -24,13 +24,28 @@
         @if($questions->lastPage() >=2)
             @for ($i = 0; $i < $questions->lastPage(); $i++)
                 <div class="justify-center">
-                    <a href="{{$questions->url($i+1)}}"
-                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                        {{$i+1}}
-                    </a>
+                    @if ( $i+1 < $questions->currentPage() )
+                        <p class="relative inline-flex items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium bg-green-500 text-white">
+                            {{$i+1}}
+                        </p>
+                    @else
+                        @if ( $i+1 == $questions->currentPage() )
+                            <p class="relative inline-flex items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium bg-blue-500 text-white">
+                                {{$i+1}}
+                            </p>
+                        @else
+                            <p class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700">
+                                {{$i+1}}
+                            </p>
+                        @endif
+                    @endif
                 </div>
             @endfor
         @endif
+        {{--                    <a href="{{$questions->url($i+1)}}"--}}
+        {{--                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">--}}
+        {{--                        {{$i+1}}--}}
+        {{--                    </a>--}}
     </nav>
     @foreach($questions as $question)
         <article class="rounded-xl bg-white my-4 p-4 ring ring-indigo-50 sm:p-6 lg:p-8 h-1/2">
@@ -39,9 +54,15 @@
                     <strong class="rounded border bg-blue-500 px-3 py-1.5 text-[10px] font-medium text-white">
                         Вопрос номер {{ $questions->currentPage() }}
                     </strong>
-                    <h3 class="mt-4 text-lg font-medium sm:text-xl break-all">
-                        {{ $question->question }}
-                    </h3>
+                    <div class="trix-content trix-file-accept mt-4 text-lg font-medium sm:text-xl break-all">
+                        @php
+                            echo($question->question);
+                        @endphp
+                    </div>
+                    {{--                    <h3 class="mt-4 text-lg font-medium sm:text-xl break-all">--}}
+                    {{--                        --}}
+                    {{--                        {{ $question->question }}--}}
+                    {{--                    </h3>--}}
                     <form method='POST' action="{{route('saveAnswerUser',session('answer_user_id'))}}">
                         @method('POST')
                         @csrf

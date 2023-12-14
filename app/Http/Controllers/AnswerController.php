@@ -10,18 +10,19 @@ class AnswerController extends Controller
 {
     public function createForQuestion($idQuestion, AnswerRequest $request)
     {
+        // обработка ошибок
         try {
+            // проверка существования вопроса
             $question = Question::find($idQuestion);
             if (!$question) {
-                return view('answer.create')->
-                with('err', "Вопрос к которому надо добавить ответ не найден");
+                session(['error' => 'Ответ не добавлен, вопрос не найден']);
+                return redirect()->route('home');
             }
+
+            // получение id теста через связи
             $idTest = $question->test->id;
-            $interpretation = Interpretation::where('column', $request->column)->first();
-            if (!$interpretation) {
-                session(['error'=>"Ответ не добавлен, интерпретации со столбцом {$request->column} не существует"]);
-                return redirect()->route('edit', $idTest);
-            }
+
+            // создание ответа
             $answer = Answer::make([
                 "answer" => $request->answer,
                 "column" => $request->column,
@@ -29,22 +30,36 @@ class AnswerController extends Controller
                 "question_id" => $question->id
             ]);
             $answer->save();
+
+            // сообщение об успешном добавлении
             session([
                 'message' => 'Ответ добавлен'
             ]);
+
+            // переадресация
             return redirect()->route('edit', $idTest);
         } catch (\Throwable $th) {
-            session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+            session(['error'=>'Ответ не добавлен, что-то пошло не так при создании ответа к вопросу, обратитесь к системному администратору']);
             return redirect()->route('home');
         }
     }
 
     public function addAnswer($idQuestion)
     {
+        // обработка ошибок
         try {
+            // получение вопроса
             $question = Question::find($idQuestion);
+
+            // получение id теста через связи
+            $idTest = $question->test->id;
+
+            // получение интерпретаций для текущего теста
+            $interpretations = Interpretation::where('test_id', $idTest)->get();
+
             return view('answer.create')->
-            with('question', $question);
+            with('question', $question)->
+            with('interpretations', $interpretations);
         } catch (\Throwable $th) {
             session(['error'=>'Ответ не добавлен, что-то пошло не так, обратитесь к системному администратору']);
             return redirect()->route('home');

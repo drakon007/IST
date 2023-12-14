@@ -23,7 +23,6 @@ class AnswerRequest extends FormRequest
     {
         return [
             "answer"=> ["required", "string"],
-            "column"=> ["required", "string"],
             "balls"=> ["required", "integer"],
         ];
     }

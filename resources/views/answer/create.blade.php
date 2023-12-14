@@ -1,3 +1,4 @@
+@include('auth.check')
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,14 +29,15 @@
                 <p class="text-red-500 text-xs italic">Ответ введен не корректно</p>
                 @enderror
 
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="column">Колонка с балами (смотреть в
-                    самом тесте)</label>
-                <input
-                    class="shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline @error('column') is-invalid @enderror"
-                    id="column" name="column" type="text" placeholder="колонка с баллами">
-                @error('column')
-                <p class="text-red-500 text-xs italic">Колонка с баллами заполнена не верно</p>
-                @enderror
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="column">Интерпретация к которой будут добавлены баллы</label>
+                <select name="column" class="bg-gray-50 border border-gray-300 text-blue-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    @foreach($interpretations as $interpretation)
+                        <option value="{{ $interpretation->column}}">
+                            {{ $interpretation->name }}
+                        </option>
+                    @endforeach
+                </select>
+
 
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="balls">Колличество баллов</label>
                 <input
@@ -49,7 +51,7 @@
                     <button
                         class=" mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
-                        Добавить тест
+                        Добавить вопрос
                     </button>
                 </div>
             </form>

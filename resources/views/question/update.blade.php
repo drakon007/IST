@@ -1,3 +1,4 @@
+@include('auth.check')
 <!doctype html>
 <html lang="en">
 <head>

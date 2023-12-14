@@ -62,31 +62,46 @@ class InterpretationController extends Controller
 
     public function createForTest($idTest, InterpretationRequest $request)
     {
+        // обработка ошибок
         try {
+            // описание с trix
+            $description = request('question-trixFields');
+            $description = str_replace('localhost', '127.0.0.1:8000', $description['content']);
+
+            // минимальное и максимальное колличество баллов
+            $min = 1;
+            $max = 100;
+
+            // проверка на существование теста
             $test = Test::find($idTest);
             if (!$test) {
-                session(['error' => 'Интерпретация не добавлена, что-то пошло не так, обратитесь к системному администратору']);
+                session(['error' => 'Интерпретация не добавлена,тест не найден']);
                 return redirect()->route('home');
             }
-            $candidate = Interpretation::where('column', $request->column)->first();
-            if ($candidate) {
-                session(['error' => "Интерпретация с столбцом '$request->column' уже существует"]);
-                return redirect()->route('createPageInter', $idTest);
-            }
+
+            // присвоение названия столбца
+            $column = count(Interpretation::where('test_id', $test->id)->get()) + 1;
+
+            // создание интерпретации
             $interpretation = Interpretation::make([
-                'description' => $request->description,
-                'min' => $request->min,
-                'max' => $request->max,
-                'column' => $request->column,
+                'name' => $request->name,
+                'description' => $description,
+                'min' => $min,
+                'max' => $max,
+                'column' => $column,
                 'test_id' => $test->id
             ]);
             $interpretation->save();
+
+            // сообщение об успешном добавлении
             session([
                 'message' => 'Интерпретация добавлена'
             ]);
+
+            // переадресация
             return redirect()->route('getForTestInter', $idTest);
         } catch (\Throwable $th) {
-            session(['error' => 'Тест не добавлен, что-то пошло не так, обратитесь к системному администратору']);
+            session(['error' => 'Тест не добавлен, что-то пошло не так при создании интерпретации, обратитесь к системному администратору']);
             return redirect()->route('home');
         }
 
@@ -129,7 +144,7 @@ class InterpretationController extends Controller
             select('column', DB::raw('count(balls) as balls'))->
             where('answer_user_id', '=', $answer->id)->groupBy('column')->get();
 
-            $arrayBall=[];
+            $arrayBall = [];
             foreach ($columnBalls as $all) {
                 array_push($arrayBall, $all->balls);
             }

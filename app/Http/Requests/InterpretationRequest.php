@@ -22,10 +22,7 @@ class InterpretationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "description" => ['required', 'string'],
-            "min" => ['required', 'integer'],
-            "max" => ['required', 'integer'],
-            "column" => ['required', 'string'],
+            "name" => ['required', 'string'],
         ];
     }
 }

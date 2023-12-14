@@ -1,3 +1,4 @@
+@include('auth.check')
 <!doctype html>
 <html lang="en">
 <head>
@@ -45,7 +46,7 @@
                 <div class="flex justify-between">
                     <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
                         <p>
-                            Интерпретация номер {{$loop->iteration}}
+                            Интерпретация номер {{$loop->iteration}}: {{ $interpretation->name }}
                         </p>
                     </div>
                     <div class="flex flex-col justify-start">
@@ -63,10 +64,10 @@
                         </a>
                     </div>
                 </div>
-                <div>
-                    <p>
-                        {{ $interpretation->description }}
-                    </p>
+                <div class="trix-content trix-file-accept">
+                    @php
+                        echo($interpretation->description);
+                    @endphp
                 </div>
             </div>
         </div>

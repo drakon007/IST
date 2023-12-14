@@ -7,6 +7,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerUserController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TrixController;
 
 Route::get('/', function () {
 //    return view('welcome');
@@ -79,6 +80,6 @@ Route::prefix('useranswer')->group(function () {
 });
 
 
+Auth::routes();
 
-
-
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

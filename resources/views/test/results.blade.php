@@ -38,7 +38,7 @@
                         @endforeach
                         @foreach($interpretations as $interpretation)
                             @if (key($interpretation) == $answerUser->end_at)
-                            <p>Получил интерпретацию: {{$interpretation[key($interpretation)]->description}}</p>
+                            <p>Получил интерпретацию: {{$interpretation[key($interpretation)]->name}}</p>
                             @endif
                         @endforeach
 

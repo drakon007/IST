@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Te7aHoudini\LaravelTrix\Traits\HasTrixRichText;
 
 class Question extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTrixRichText;
 
     public $timestamps = false;
 
