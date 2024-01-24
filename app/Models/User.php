@@ -22,7 +22,7 @@ class User extends Authenticatable
         'password',
         'login',
         'fio',
-        'group',
+        'group_id',
         'token'
     ];
 
@@ -35,7 +35,7 @@ class User extends Authenticatable
         'password',
         'login',
         'fio',
-        'group',
+        'group_id',
         'token'
     ];
 
@@ -47,6 +47,10 @@ class User extends Authenticatable
 
     public function roles() {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function group() {
+        return $this->belongsTo(Group::class);
     }
 
 }

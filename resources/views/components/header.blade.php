@@ -14,6 +14,5 @@
         <li class="text-right">
             <a href="{{route('logout')}}" onclick="onbeunload(true)" class=" block text-blue-500 hover:border-blue-500 py-2 px-2  hover:bg-gray-200 rounded">Выйти</a>
         </li>
-
     </ul>
 </header>

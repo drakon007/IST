@@ -1,44 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>edit</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-    <script type="text/javascript" src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
-    @trixassets
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'EditTest'])
 </head>
 <body>
 
-@include('layouts.header')
-@if (session()->has('message'))
-    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('message')}}</p>
-        </div>
-    </div>
-@endif
-@if (session()->has('error'))
-    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('error')}}</p>
-        </div>
-    </div>
-@endif
+@include('components.header')
+@include('components.error')
+@include('components.message')
 
 <div class="mx-auto  py-6 lg:px-32 lg:pt-12">
-        <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Вопросы для теста: {{$test->name}}</h1>
-         <div class="flex justify-end">
-             <a href="{{route('updatePageTest', $test->id)}}"
-                class="focus:outline-none text-white font-medium bg-blue-500 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                 <button>
-                     Изменить название теста
-                 </button>
-             </a>
-         </div>
+    <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Вопросы для теста: {{$test->name}}</h1>
+    <div class="flex justify-end">
+        <a href="{{route('updatePageTest', $test->id)}}"
+           class="focus:outline-none text-white font-medium bg-blue-500 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+            <button>
+                Изменить название теста
+            </button>
+        </a>
+    </div>
     <div class="flex justify-end">
         <a href="{{route('getForTestInter', $test->id)}}"
            class="focus:outline-none text-white font-medium bg-blue-500 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
@@ -48,7 +28,7 @@
         </a>
     </div>
 
-    @include('question.question', ["test_id"=>$test->id])
+    @include('components.question', ["test_id"=>$test->id])
     <div class="rounded flex flex-col self-start text-center">
         <a href="{{route('addQuestion', $test->id)}}"
            class="relative inline-flex items-center justify-between rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-blue-700 bg-blue-500 text-white">

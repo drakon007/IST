@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddRequest;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\LoginRequest;
+use App\Models\Group;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -14,28 +15,34 @@ class AuthController extends Controller
 {
     public function login()
     {
+        // обработчик ошибок
         try {
+            // переадресация
             return view('auth.login')->with('err',false);
         } catch (\Throwable $th) {
-            session(['error'=>'Что-то пошло не так, обратитесь к системному администратору']);
+            // todo сделать редирект на 404
+            session(['error'=>'Что-то пошло не так при авторизации, обратитесь к системному администратору']);
             return redirect()->route('login');
         }
     }
     public function auth(LoginRequest $request)
     {
-        try {
+        // обработчик
+        try{
             // получение пользователя и проверка существования
             $user = User::where("login", $request->login)->first();
             if (!$user) {
                 return view('auth.login')->
-                with('err',"Пользователя не существует");
+                with('err',"Данные не действительны");
             }
 
+            // сравненией хеша
             if (!Hash::check($request->password, $user->password )) {
                 return view('auth.login')->
-                with('err',"Поверьте пароль");
+                with('err',"Данные не действительны");
             }
 
+            // проверка какие роли есть todo сделать разделение по ролям более заметное
             foreach ($user->roles as $role) {
                 if ($role->name == 'admin') {
                     $userRole = 'admin';
@@ -48,41 +55,48 @@ class AuthController extends Controller
                 $userRole = 'user';
             }
 
+            // создание сессии
             session([
                 'id'=> $user->id,
-                'login'=>$user->login,
+                'fio'=>$user->fio,
                 'role'=>$userRole,
             ]);
-
             Auth::login($user);
+
             return redirect()->route('home');
         } catch (\Throwable $th) {
             session(['error'=>'Что-то пошло не так, обратитесь к системному администратору']);
             return redirect()->route('login');
         }
     }
-    public function create() {
+    public function register() {
         try {
-            return view('auth.adduser')->
+            $groups = Group::all();
+            return view('auth.register')->
+                with('groups', $groups)->
                 with('err', false);
         } catch (\Throwable $th) {
             session(['error'=>'Что-то пошло не так, обратитесь к системному администратору']);
             return redirect()->route('login');
         }
     }
-    public function adduser(AddRequest $request)
+    public function createUser(AddRequest $request)
     {
         try {
+            $groups = Group::all();
             $candidate = User::where("login", $request->login)->first();
 
             if ($candidate) {
-                return view('auth.adduser')->
-                with('err',"Пользователь уже существует");
+                return view('auth.register')->with('groups', $groups)->
+                with('err',"Полозователь с таким логином уже существует");
             }
-
+            if ($request->password != $request->password2) {
+                return view('auth.register')->with('groups', $groups)->
+                with('err',"Введенные пароли отличаются");
+            }
             $user = User::make([
                 'fio'=>$request->fio,
-                'group'=>$request->group,
+                'group_id'=>$request->group,
                 'login' => $request->login,
                 'token'=>Str::random(60),
                 'password'=> Hash::make($request->password)
@@ -93,7 +107,7 @@ class AuthController extends Controller
 
             session([
                 'id'=> $user->id,
-                'login'=>$user->login,
+                'fio'=>$user->fio,
                 'role'=>$role->name
             ]);
 

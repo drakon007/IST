@@ -7,20 +7,17 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerUserController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\TrixController;
 
 Route::get('/', function () {
-//    return view('welcome');
-
     return redirect()->route('home');
 });
 
 Route::prefix('auth')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/login', 'login')->name('login');
-        Route::post('/auth', 'auth')->name('auth');
-        Route::post('/adduser', 'adduser')->name('adduser');
-        Route::get('/create', 'create')->name('createUser');
+        Route::post('/login', 'auth')->name('auth');
+        Route::get('/register', 'register')->name('register');
+        Route::post('/register', 'createUser')->name('createUser');
         Route::get('/logout', 'logout')->name('logout');
     });
 });
@@ -73,13 +70,8 @@ Route::prefix('answer')->group(function () {
     });
 });
 
-Route::prefix('useranswer')->group(function () {
+Route::prefix('user-answer')->group(function () {
     Route::controller(AnswerUserController::class)->group(function () {
         Route::post('create/{id_user}', 'saveAnswerUser')->name('saveAnswerUser')->middleware('auth');
     });
 });
-
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -1,23 +1,19 @@
-@include('auth.check')
-<!doctype html>
+@include('components.check')
+    <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>UpdateQuestion</title>
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'EditQuestion'])
 </head>
 <body>
 
-@include('layouts.header')
+@include('components.header')
 
 <main class="h-screen w-full flex justify-items-center items-center">
     <!--поле для формы и лого-->
     <div class="flex mx-auto sm:w-full flex-col">
         <div class="px-5 xl:w-1/3 md:w-1/2 sm:w-full  mx-auto py-2 lg:px-32 lg:pt-12">
-            <form method='POST' action="{{ route('updateQuestion', $question->id) }}" class="w-full" enctype="multipart/form-data">
+            <form method='POST' action="{{ route('updateQuestion', $question->id) }}" class="w-full"
+                  enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
 
@@ -28,7 +24,7 @@
                 @error('question')
                 <p class="text-red-500 text-xs italic">Вопрос введен не корректно</p>
                 @enderror
-
+{{-- todo поменять сообщение об ошибке--}}
                 @if (!!$err)
                     <p class="text-red-500 text-xs italic">{{$err}}</p>
                 @endif

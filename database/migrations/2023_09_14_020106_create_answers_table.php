@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->mediumText('answer');
             $table->string('column');
-            $table->integer('balls'); 
-            $table->integer('question_id');
+            $table->integer('balls');
+            $table->foreignId('question_id')->constrained();
         });
     }
 

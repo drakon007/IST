@@ -1,17 +1,12 @@
-@include('auth.check')
-<!doctype html>
+@include('components.check')
+    <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>createAnswer</title>
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'CreateAnswer'])
 </head>
 <body>
 
-@include('layouts.header')
+@include('components.header')
 
 <main class="h-screen w-screen flex justify-items-center items-center">
     <!--поле для формы и лого-->
@@ -29,8 +24,10 @@
                 <p class="text-red-500 text-xs italic">Ответ введен не корректно</p>
                 @enderror
 
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="column">Интерпретация к которой будут добавлены баллы</label>
-                <select name="column" class="bg-gray-50 border border-gray-300 text-blue-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="column">Интерпретация к которой будут
+                    добавлены баллы</label>
+                <select name="column"
+                        class="bg-gray-50 border border-gray-300 text-blue-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     @foreach($interpretations as $interpretation)
                         <option value="{{ $interpretation->column}}">
                             {{ $interpretation->name }}
@@ -51,7 +48,7 @@
                     <button
                         class=" mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
-                        Добавить вопрос
+                        Добавить ответ
                     </button>
                 </div>
             </form>

@@ -30,7 +30,7 @@
 
                         </div>
                     </div>
-                    @include('answer.answer', ['question_id' => $question->id])
+                    @include('components.answer', ['question_id' => $question->id])
                 </div>
             </div>
             <div class="mt-6 rounded flex flex-col self-start text-center">

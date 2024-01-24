@@ -1,31 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HomePage</title>
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'Home'])
 </head>
 <body>
 
-@include('layouts.header')
-
-@if (session()->has('message'))
-    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('message')}}</p>
-        </div>
-    </div>
-@endif
-@if (session()->has('error'))
-    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('error')}}</p>
-        </div>
-    </div>
-@endif
+@include('components.header')
+@include('components.error')
+@include('components.message')
 
 <div class="container  mx-auto  py-6 lg:px-32 lg:pt-12">
     <div class="flex flex-wrap">
@@ -35,8 +17,6 @@
                     <div class="px-6 py-4">
                         <div
                             class="font-bold text-xl mb-2 text-center md:text-left md:text-3xl"> {{$test->name}}</div>
-                        {{--<p class="text-gray-700 text-base">Описаниe</p>--}}
-                        {{--//если надо будет добавить описание к тесту--}}
                     </div>
                     <div class="text-center md:text-left px-6 pt-4 pb-2  text-xl md:text-base">
                         @if ($test->status == "active")

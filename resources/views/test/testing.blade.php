@@ -1,23 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>testing</title>
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'Testing'])
 </head>
 <body>
 
-@include('layouts.header')
-@if (session()->has('error'))
-    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('error')}}</p>
-        </div>
-    </div>
-@endif
+@include('components.header')
+@include('components.error')
 <div class="container mx-auto  px-5 py-2 lg:px-32 lg:pt-12">
     <nav class=" mx-auto flex gap-0.5">
         {{--если страниц несколько, тогда вывесити ссылки на них--}}
@@ -42,6 +31,7 @@
                 </div>
             @endfor
         @endif
+        {{-- todo сделать обновление атвета пользователя перед сохранением ответов + продолжение предыдущего теста, если есть --}}
         {{--                    <a href="{{$questions->url($i+1)}}"--}}
         {{--                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">--}}
         {{--                        {{$i+1}}--}}
@@ -66,14 +56,14 @@
                     <form method='POST' action="{{route('saveAnswerUser',session('answer_user_id'))}}">
                         @method('POST')
                         @csrf
-                        @include('answer.answer', ['question_id' => $question->id])
+                        @include('components.answer', ['question_id' => $question->id])
                         {{session(['next'=>$questions->nextPageUrl()])}}
                         <div
-                            class="items-center justify-end flex mt-10">
+                                class="items-center justify-end flex mt-10">
                             @if($questions->currentPage() < $questions->lastPage())
 
                                 <div
-                                    class="flex items-center justify-end rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
+                                        class="flex items-center justify-end rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
                                     <button>
                                         Следущий вопрос
                                     </button>
@@ -88,7 +78,7 @@
                             @else
                                 {{session(['next'=>'home'])}}
                                 <div
-                                    class="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
+                                        class="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
                                     <button>
                                         Завершить тест
                                     </button>
@@ -101,4 +91,15 @@
         </article>
     @endforeach
 </div>
+<script>
+    function onbeunload(status) {
+        if (status) {
+            window.onbeforeunload = function () {
+                status = false;
+                return false;
+            };
+        }
+    }
+</script>
+
 </body>

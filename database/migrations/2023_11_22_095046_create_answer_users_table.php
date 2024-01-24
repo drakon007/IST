@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('answer_users', function (Blueprint $table) {
             $table->id();
-            $table->integer('test_id'); // id теста
-            $table->integer('user_id'); // id пользователя
+            $table->foreignId('test_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->enum('status', ['passed', 'failed'])->default('failed');
             $table->timestamp('start_at')->nullable();
             $table->timestamp('end_at')->nullable();

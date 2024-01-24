@@ -1,34 +1,18 @@
-@include('auth.check')
-<!doctype html>
+@include('components.check')
+    <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>edit</title>
-    @vite('resources/css/app.css')
+    @include('components.head', ['namePage' =>'EditInterp'])
 </head>
 <body>
 
-@include('layouts.header')
-@if (session()->has('message'))
-    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('message')}}</p>
-        </div>
-    </div>
-@endif
-@if (session()->has('error'))
-    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
-        <div>
-            <p class="text-sm">{{session()->pull('error')}}</p>
-        </div>
-    </div>
-@endif
+@include('components.header')
+@include('components.message')
+@include('components.error')
 
 <div class="mx-auto  py-6 lg:px-32 lg:pt-12">
-    <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Интерпертации для теста: {{$test->name}}</h1>
+    <h1 class="font-bold mb-6 text-center md:text-left text-4xl md:text-3xl">Интерпертации для
+        теста: {{$test->name}}</h1>
 
     <div class="flex justify-end">
         <a href="{{route('edit', $test->id)}}"
@@ -39,39 +23,39 @@
         </a>
     </div>
 
-@foreach ($interpretations as $interpretation)
-    <article class="w-full rounded-xl bg-white my-4 p-4 ring ring-indigo-50 sm:p-6 lg:p-8 h-1/2">
-        <div class="flex w-full items-start sm:gap-8">
-            <div class="w-full">
-                <div class="flex justify-between">
-                    <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
-                        <p>
-                            Интерпретация номер {{$loop->iteration}}: {{ $interpretation->name }}
-                        </p>
+    @foreach ($interpretations as $interpretation)
+        <article class="w-full rounded-xl bg-white my-4 p-4 ring ring-indigo-50 sm:p-6 lg:p-8 h-1/2">
+            <div class="flex w-full items-start sm:gap-8">
+                <div class="w-full">
+                    <div class="flex justify-between">
+                        <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
+                            <p>
+                                Интерпретация номер {{$loop->iteration}}: {{ $interpretation->name }}
+                            </p>
+                        </div>
+                        <div class="flex flex-col justify-start">
+                            <a href="{{route('deleteInterForTest', ['id_test'=>$test->id, 'id_interpretation'=>$interpretation->id])}}"
+                               class="bg-red-700 text-white font-medium hover:bg-red-800 w-24 h-10 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 ">
+                                <button>
+                                    Удалить
+                                </button>
+                            </a>
+                            <a href="#"
+                               class="focus:outline-none text-white font-medium bg-blue-500 w-24 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                                <button>
+                                    Изменить
+                                </button>
+                            </a>
+                        </div>
                     </div>
-                    <div class="flex flex-col justify-start">
-                        <a href="{{route('deleteInterForTest', ['id_test'=>$test->id, 'id_interpretation'=>$interpretation->id])}}"
-                           class="bg-red-700 text-white font-medium hover:bg-red-800 w-24 h-10 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 ">
-                            <button>
-                                Удалить
-                            </button>
-                        </a>
-                        <a href="#"
-                           class="focus:outline-none text-white font-medium bg-blue-500 w-24 h-10 hover:bg-blue-700 rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                            <button>
-                                Изменить
-                            </button>
-                        </a>
+                    <div class="trix-content trix-file-accept">
+                        @php
+                            echo($interpretation->description);
+                        @endphp
                     </div>
-                </div>
-                <div class="trix-content trix-file-accept">
-                    @php
-                        echo($interpretation->description);
-                    @endphp
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
     @endforeach
     <div class="rounded flex flex-col self-start text-center">
         <a href="{{route('createPageInter', $test->id)}}"

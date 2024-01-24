@@ -22,10 +22,9 @@ class AddRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "login"=>['required', 'integer','min:1', 'max:999999'],
-            "group"=>['required','string','min:1', 'max:200'],
-            "fio"=>['required','string','min:1', 'max: 255'],
-            "password"=>['required', 'string','min:1', 'max:200'],
+//            "login"=>['required', 'integer','min:1', 'max:999999'],
+//            "fio"=>['required','string','min:1', 'max: 255'],
+//            "password"=>['required', 'string','min:1', 'max:200'],
         ];
     }
 }

@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->longText('question');
-            $table->integer('test_id');
+            $table->foreignId('test_id')->constrained();
+            // $table->foreign('test_id')->references('id')->on('tests');
         });
     }
 

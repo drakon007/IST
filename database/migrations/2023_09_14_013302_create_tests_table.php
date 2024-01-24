@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
+            $table->longText('description');
             $table->integer('type');
             $table->string('name');
             $table->enum('status', ['active', 'inactive'])->default('active');

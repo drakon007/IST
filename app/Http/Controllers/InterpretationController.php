@@ -65,7 +65,7 @@ class InterpretationController extends Controller
         // обработка ошибок
         try {
             // описание с trix
-            $description = request('question-trixFields');
+            $description = request('interpretation-trixFields');
             $description = str_replace('localhost', '127.0.0.1:8000', $description['content']);
 
             // минимальное и максимальное колличество баллов

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('token');
             $table->string('fio');
-            $table->string('group');
+            $table->foreignId('group_id')->constrained();
             $table->timestamps();
         });
     }

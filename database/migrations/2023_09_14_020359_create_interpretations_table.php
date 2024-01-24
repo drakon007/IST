@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('min');
             $table->integer('max');
             $table->string('column');
-            $table->integer('test_id');
+            $table->foreignId('test_id')->constrained();
         });
     }
 
