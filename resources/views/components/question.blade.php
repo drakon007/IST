@@ -3,6 +3,7 @@
         <article class="w-full rounded-xl bg-white my-4 p-4 ring ring-indigo-50 sm:p-6 lg:p-8 h-1/2">
             <div class="flex w-full items-start sm:gap-8">
                 <div class="w-full">
+                    <h3>Вопрос номер: {{$loop->iteration}}</h3>
                     <div class="flex justify-between">
                         <div class="w-8/12 flex mt-4 text-lg sm:text-xl break-all">
 
