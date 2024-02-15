@@ -86,6 +86,8 @@ class AuthController extends Controller
             $groups = Group::all();
             $candidate = User::where("login", $request->login)->first();
 
+
+
             if ($candidate) {
                 return view('auth.register')->with('groups', $groups)->
                 with('err',"Полозователь с таким логином уже существует");
@@ -101,6 +103,7 @@ class AuthController extends Controller
                 'token'=>Str::random(60),
                 'password'=> Hash::make($request->password)
             ]);
+
             $user->save();
             $role =  Role::where('name','user')->first();
             $user->roles()->attach($role->id);

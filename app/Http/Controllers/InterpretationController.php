@@ -16,7 +16,6 @@ class InterpretationController extends Controller
     {
         try {
             $interpretations = Interpretation::all();
-
             if (count($interpretations) == 0) {
                 return view('interpretation.render')
                     ->with('interpretations', "интерпретаций нет");

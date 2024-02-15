@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     @include('components.head', ['namePage' =>'StartPage'])
-</head>>
+</head>
 <body>
 @include('components.header')
 

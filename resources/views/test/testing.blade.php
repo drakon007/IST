@@ -4,7 +4,11 @@
     @include('components.head', ['namePage' =>'Testing'])
 </head>
 <body>
-
+<script>
+    function submitForm() {
+        document.getElementById("clk").disabled = true;
+    }
+</script>
 @include('components.header')
 @include('components.error')
 <div class="container mx-auto  px-5 py-2 lg:px-32 lg:pt-12">
@@ -53,7 +57,7 @@
                     {{--                        --}}
                     {{--                        {{ $question->question }}--}}
                     {{--                    </h3>--}}
-                    <form method='POST' action="{{route('saveAnswerUser',session('answer_user_id'))}}">
+                    <form method='POST' onsubmit="submitForm()" action="{{route('saveAnswerUser',session('answer_user_id'))}}">
                         @method('POST')
                         @csrf
                         @include('components.answer', ['question_id' => $question->id])
@@ -64,7 +68,7 @@
 
                                 <div
                                         class="flex items-center justify-end rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                                    <button>
+                                    <button id="clk">
                                         Следущий вопрос
                                     </button>
                                     <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
@@ -79,7 +83,7 @@
                                 {{session(['next'=>'home'])}}
                                 <div
                                         class="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-500  hover:text-white">
-                                    <button>
+                                    <button id="clk">
                                         Завершить тест
                                     </button>
                                 </div>
