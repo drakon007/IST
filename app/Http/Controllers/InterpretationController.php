@@ -9,6 +9,7 @@ use App\Models\Test;
 use App\Models\User;
 use App\Models\AnswerUser;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class InterpretationController extends Controller
 {
@@ -142,7 +143,7 @@ class InterpretationController extends Controller
             join('answers as a', 'aau.answer_id', '=', 'a.id')->
             select('column', DB::raw('count(balls) as balls'))->
             where('answer_user_id', '=', $answer->id)->groupBy('column')->get();
-
+            Log::info($columnBalls);
             $arrayBall = [];
             foreach ($columnBalls as $all) {
                 array_push($arrayBall, $all->balls);
